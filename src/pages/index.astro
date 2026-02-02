@@ -24,27 +24,27 @@ const latestPost = posts[0];
 		<Header />
 		<main>
 			<section class="hero">
-				<div class="status-badge">2026.04 / Career Start</div>
-				<h1>🧑🏻‍💻 Engineer Log</h1>
-				<p class="tagline">
+				<div class="status-badge animate-item">2026.04 / Career Start</div>
+				<h1 class="animate-item">🧑🏻‍💻 Engineer Log</h1>
+				<p class="tagline animate-item">
 					新社会人エンジニアの学びと日常。<br />
 					<span>挑戦</span>、<span>成長</span>、そして<span>豊かな暮らし</span>への探求。
 				</p>
 			</section>
 
-			<hr class="divider" />
+			<hr class="divider animate-divider" />
 
 			<section class="focus-areas">
 				<div class="grid">
-					<div class="card">
+					<div class="card animate-card">
 						<h3>Technical Growth</h3>
 						<p>日々の業務で触れる技術や、実務で役立つプログラミング手法をアウトプットします。</p>
 					</div>
-					<div class="card">
+					<div class="card animate-card">
 						<h3>AI</h3>
-						<p>趣味であるAIを用いた資産運用の試行錯誤を記録します。</p>
+						<p>趣味でおこなう技術系の挑戦を記録します。</p>
 					</div>
-					<div class="card">
+					<div class="card animate-card">
 						<h3>Lifestyle</h3>
 						<p>お気に入りのガジェットや旅行、QOLを高めるモノ・コトについて。</p>
 					</div>
@@ -75,6 +75,65 @@ const latestPost = posts[0];
 				--text-sub: #636e72;
 				--accent: #0984e3; 
 			}
+
+			/* =========================================
+			   アニメーション定義 (新しく追加した部分)
+			   ========================================= */
+			
+			/* 下からフワッと浮き上がる動き */
+			@keyframes fadeInUp {
+				from {
+					opacity: 0;
+					transform: translateY(20px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
+			/* 横線が広がる動き */
+			@keyframes expandWidth {
+				from { width: 0; opacity: 0; }
+				to { width: 100%; opacity: 1; }
+			}
+
+			/* 初期状態を非表示にする（アニメーション開始前の一瞬のチラつき防止） */
+			.animate-item, .animate-divider, .animate-card {
+				opacity: 0;
+			}
+
+			/* ヒーローセクションの要素に適用（順番に表示） */
+			.animate-item {
+				animation: fadeInUp 0.8s ease-out forwards;
+			}
+			/* 1つ目: バッジ (0.2秒後) */
+			.hero .status-badge.animate-item { animation-delay: 0.2s; }
+			/* 2つ目: タイトル (0.4秒後) */
+			.hero h1.animate-item { animation-delay: 0.4s; }
+			/* 3つ目: タグライン (0.6秒後) */
+			.hero .tagline.animate-item { animation-delay: 0.6s; }
+
+			/* 区切り線のアニメーション (0.8秒後) */
+			.divider.animate-divider {
+				animation: expandWidth 1s ease-out forwards 0.8s;
+			}
+
+			/* 3つのカードに適用（順番に表示） */
+			.animate-card {
+				animation: fadeInUp 0.8s ease-out forwards;
+			}
+			/* 左のカード (1.0秒後) */
+			.grid .card:nth-child(1) { animation-delay: 1.0s; }
+			/* 真ん中のカード (1.2秒後) */
+			.grid .card:nth-child(2) { animation-delay: 1.2s; }
+			/* 右のカード (1.4秒後) */
+			.grid .card:nth-child(3) { animation-delay: 1.4s; }
+
+
+			/* =========================================
+			   既存のスタイル (変更なし)
+			   ========================================= */
 			.hero { padding: 3rem 0 1.5rem; text-align: left; }
 			.status-badge {
 				display: inline-block;
@@ -95,11 +154,15 @@ const latestPost = posts[0];
 				border: 1px solid #eee;
 				border-radius: 4px;
 				box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+				/* 既存のホバーアクションもそのまま効きます */
+				transition: transform 0.2s ease, border-color 0.2s ease;
 			}
+			.card:hover { transform: translateY(-3px); border-color: var(--accent); }
+
 			.card h3 { font-size: 1.1rem; margin-bottom: 0.8rem; border-bottom: 2px solid var(--accent); display: inline-block; }
 			.card p { font-size: 0.95rem; color: var(--text-sub); margin: 0; }
 			
-			/* 最新記事ハイライトのスタイル */
+			/* 最新記事ハイライトのスタイル (ここも変更なし) */
 			.latest-log-highlight { margin-top: 4rem; }
 			.highlight-card {
 				display: block;
