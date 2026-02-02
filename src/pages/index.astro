@@ -54,7 +54,7 @@ const latestPost = posts[0];
 			<section class="latest-log-highlight">
 				<h2>Latest Log / 最新の記事</h2>
 				{latestPost ? (
-					<a href={`/blog/${latestPost.slug}/`} class="highlight-card">
+					<a href={`/blog/${latestPost.id}/`} class="highlight-card">
 						<div class="date">
 							<FormattedDate date={latestPost.data.pubDate} />
 						</div>
