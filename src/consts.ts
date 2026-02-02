@@ -11,7 +11,7 @@ export const CATEGORIES = [
 		// slug: URLや記事のフロントマターで使う英数字の名前
 		slug: 'technical-growth',
 		// label: 画面に表示する実際のタイトル
-		label: 'Technical Growth',
+		label: 'Technical',
 		// description: ホーム画面のカードに表示する説明文
 		description: '日々の業務で触れる技術や、実務で役立つプログラミング手法をアウトプットします。',
 	},
