@@ -2,12 +2,13 @@
 import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+// ▼▼▼ CATEGORIES をインポート ▼▼▼
+import { SITE_TITLE, SITE_DESCRIPTION, CATEGORIES } from '../../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 import { Image } from 'astro:assets';
 
-// 全てのブログ記事を取得し、新しい順に並び替える
+// 全てのブログ記事を取得し、新しい順に並び替え
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
@@ -31,9 +32,7 @@ const posts = (await getCollection('blog')).sort(
 				padding: 3em 1em;
 			}
 			
-			/* ==========================
-			   カテゴリナビゲーション
-			   ========================== */
+			/* カテゴリナビゲーション */
 			.category-nav {
 				display: flex;
 				flex-wrap: wrap;
@@ -58,16 +57,14 @@ const posts = (await getCollection('blog')).sort(
 				color: var(--accent);
 				background: #eef2ff;
 			}
-			/* 現在のページ（All Posts）を強調するスタイル */
+			/* 現在のページを強調するスタイル */
 			.cat-link.active {
 				background: var(--accent-gradient);
 				color: white;
 				box-shadow: 0 4px 15px rgba(9, 132, 227, 0.3);
 			}
 
-			/* ==========================
-			   記事リストスタイル
-			   ========================== */
+			/* 記事リストスタイル */
 			ul {
 				display: grid;
 				grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -109,7 +106,6 @@ const posts = (await getCollection('blog')).sort(
 				color: var(--text-sub);
 				font-size: 0.9rem;
 			}
-			/* ヒーローイメージがある場合のスタイル（任意） */
 			.hero-image {
 				width: 100%;
 				height: 180px;
@@ -124,18 +120,20 @@ const posts = (await getCollection('blog')).sort(
 			<section>
 				<nav class="category-nav">
 					<a href="/blog/" class="cat-link active">All Posts</a>
-					<a href="/blog/technical-growth" class="cat-link">Technical Growth</a>
-					<a href="/blog/ai" class="cat-link">AI</a>
-					<a href="/blog/lifestyle" class="cat-link">Lifestyle</a>
-				</nav>
+					
+					{CATEGORIES.map((cat) => (
+						<a href={`/blog/${cat.slug}`} class="cat-link">
+							{cat.label}
+						</a>
+					))}
+					</nav>
 
 				<ul>
 					{posts.map((post) => (
 						<li>
 							<a href={`/blog/${post.id}/`}>
-								{/* もし記事にヒーロー画像があれば表示する（なければ省略） */}
 								{post.data.heroImage && (
-    								<Image width={720} height={360} src={post.data.heroImage} alt="" class="hero-image" />
+									<Image width={720} height={360} src={post.data.heroImage} alt="" class="hero-image" />
 								)}
 								<div style="padding: 1rem 0 0;">
 									<h4 class="title">{post.data.title}</h4>

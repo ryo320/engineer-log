@@ -2,42 +2,40 @@
 import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+// ▼▼▼ CATEGORIES をインポート ▼▼▼
+import { SITE_TITLE, SITE_DESCRIPTION, CATEGORIES } from '../../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 import { Image } from 'astro:assets';
 
 /* ==================================================
-   重要：このファイルが作るページのリストを定義
+   動的ページの生成設定
    ================================================== */
-// Astroに「こういうカテゴリのページを作ってね」と教える関数です
 export async function getStaticPaths() {
-  // 定義済みのカテゴリリスト
-  const categories = ['technical-growth', 'ai', 'lifestyle'];
-  
-  // それぞれのカテゴリに対応するパス（URL）の情報を返します
-  return categories.map((category) => ({
-    params: { category }, // URLの [category] 部分に入る値
-    props: { category },  // ページ内で使うデータ
+  // ▼▼▼ 設定ファイルに基づいてパスを生成します ▼▼▼
+  // これにより、consts.ts にカテゴリを追加するだけで、自動的にページが作られるようになります。
+  return CATEGORIES.map((cat) => ({
+    params: { category: cat.slug },
+    // ページ内でカテゴリの全データ（labelなど）を使えるように渡しておきます
+    props: { categoryData: cat }, 
   }));
 }
 
-// 現在のページのカテゴリ名を URL から取得
+// URLから現在のカテゴリslugを取得
 const { category } = Astro.params;
+// getStaticPathsから渡されたカテゴリデータを取得
+const { categoryData } = Astro.props;
 
 // 全てのブログ記事を取得
 const allPosts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 
-// 現在のカテゴリと一致する記事だけを「絞り込み（フィルター）」
+// 現在のカテゴリと一致する記事だけを「絞り込み」
 const filteredPosts = allPosts.filter((post) => post.data.category === category);
 
-// ページのタイトル用に、カテゴリ名をきれいな表示形式に変換（例: technical-growth → Technical Growth）
-const pageTitle = category
-  .split('-')
-  .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-  .join(' ');
+// ページのタイトルには、設定ファイルに定義されたきれいなラベル名を使用します
+const pageTitle = categoryData.label;
 
 ---
 
@@ -46,7 +44,7 @@ const pageTitle = category
 	<head>
 		<BaseHead title={`${pageTitle} | ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
 		<style>
-			/*スタイルは index.astro と共通です */
+			/* CSSは blog/index.astro と共通なので省略します（同じスタイルが適用されます） */
 			:root {
 				--accent: #0984e3;
 				--accent-gradient: linear-gradient(45deg, #0984e3, #6c5ce7);
@@ -59,8 +57,6 @@ const pageTitle = category
 				margin: auto;
 				padding: 3em 1em;
 			}
-			
-			/* カテゴリナビゲーション */
 			.category-nav {
 				display: flex;
 				flex-wrap: wrap;
@@ -85,14 +81,11 @@ const pageTitle = category
 				color: var(--accent);
 				background: #eef2ff;
 			}
-			/* 現在のページを強調するスタイル */
 			.cat-link.active {
 				background: var(--accent-gradient);
 				color: white;
 				box-shadow: 0 4px 15px rgba(9, 132, 227, 0.3);
 			}
-
-			/* 記事リストスタイル */
 			ul {
 				display: grid;
 				grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -149,14 +142,19 @@ const pageTitle = category
 				<nav class="category-nav">
 					<a href="/blog/" class="cat-link">All Posts</a>
 					
-					<a href="/blog/technical-growth" class={`cat-link ${category === 'technical-growth' ? 'active' : ''}`}>Technical Growth</a>
-					<a href="/blog/ai" class={`cat-link ${category === 'ai' ? 'active' : ''}`}>AI</a>
-					<a href="/blog/lifestyle" class={`cat-link ${category === 'lifestyle' ? 'active' : ''}`}>Lifestyle</a>
-				</nav>
+					{CATEGORIES.map((cat) => (
+						<a 
+							href={`/blog/${cat.slug}`}
+							/* 現在表示しているカテゴリと一致したら active クラスをつける */
+							class={`cat-link ${category === cat.slug ? 'active' : ''}`}
+						>
+							{cat.label}
+						</a>
+					))}
+					</nav>
 
 				<ul>
 					{
-						// 絞り込んだ結果、記事がある場合
 						filteredPosts.length > 0 ? (
 							filteredPosts.map((post) => (
 								<li>
@@ -173,7 +171,6 @@ const pageTitle = category
 									</a>
 								</li>
 							))
-						// 絞り込んだ結果、記事が一つもない場合
 						) : (
 							<p style="text-align: center; color: var(--text-sub); grid-column: 1 / -1;">
 								このカテゴリの記事はまだありません。
