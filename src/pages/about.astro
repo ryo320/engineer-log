@@ -5,59 +5,83 @@ import Layout from '../layouts/BlogPost.astro';
 
 <Layout
 	title="About Me"
-	description="Lorem ipsum dolor sit amet"
-	pubDate={new Date('August 08 2021')}
+	description="このブログの運営者と技術的関心、ライフスタイルについて。"
+	pubDate={new Date('February 02 2026')}
 	heroImage={AboutHeroImage}
 >
-	<p>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-		labore et dolore magna aliqua. Vitae ultricies leo integer malesuada nunc vel risus commodo
-		viverra. Adipiscing enim eu turpis egestas pretium. Euismod elementum nisi quis eleifend quam
-		adipiscing. In hac habitasse platea dictumst vestibulum. Sagittis purus sit amet volutpat. Netus
-		et malesuada fames ac turpis egestas. Eget magna fermentum iaculis eu non diam phasellus
-		vestibulum lorem. Varius sit amet mattis vulputate enim. Habitasse platea dictumst quisque
-		sagittis. Integer quis auctor elit sed vulputate mi. Dictumst quisque sagittis purus sit amet.
-	</p>
+	<div class="about-container">
+		<section>
+			<h3>Profile</h3>
+			<p>
+				2026年4月よりITエンジニアとしてキャリアをスタートした新社会人です。
+			</p>
+			<p>
+				大学では機械学習について、大学院では自律移動システムの応用技術について研究してきました。
+			</p>
+		</section>
 
-	<p>
-		Morbi tristique senectus et netus. Id semper risus in hendrerit gravida rutrum quisque non
-		tellus. Habitasse platea dictumst quisque sagittis purus sit amet. Tellus molestie nunc non
-		blandit massa. Cursus vitae congue mauris rhoncus. Accumsan tortor posuere ac ut. Fringilla urna
-		porttitor rhoncus dolor. Elit ullamcorper dignissim cras tincidunt lobortis. In cursus turpis
-		massa tincidunt dui ut ornare lectus. Integer feugiat scelerisque varius morbi enim nunc.
-		Bibendum neque egestas congue quisque egestas diam. Cras ornare arcu dui vivamus arcu felis
-		bibendum. Dignissim suspendisse in est ante in nibh mauris. Sed tempus urna et pharetra pharetra
-		massa massa ultricies mi.
-	</p>
+		<section>
+			<h3>Technical Interests</h3>
+			<ul>
+				<li><strong>Systems:</strong> 自律制御、自律移動ロボティクスのアルゴリズム。</li>
+				<li><strong>AI:</strong> LLM（ChatGPTなど）の活用や深層学習による認識技術。</li>
+				<li><strong>Development:</strong> 実務に即したプログラミング手法と開発環境の最適化。</li>
+			</ul>
+		</section>
 
-	<p>
-		Mollis nunc sed id semper risus in. Convallis a cras semper auctor neque. Diam sit amet nisl
-		suscipit. Lacus viverra vitae congue eu consequat ac felis donec. Egestas integer eget aliquet
-		nibh praesent tristique magna sit amet. Eget magna fermentum iaculis eu non diam. In vitae
-		turpis massa sed elementum. Tristique et egestas quis ipsum suspendisse ultrices. Eget lorem
-		dolor sed viverra ipsum. Vel turpis nunc eget lorem dolor sed viverra. Posuere ac ut consequat
-		semper viverra nam. Laoreet suspendisse interdum consectetur libero id faucibus. Diam phasellus
-		vestibulum lorem sed risus ultricies tristique. Rhoncus dolor purus non enim praesent elementum
-		facilisis. Ultrices tincidunt arcu non sodales neque. Tempus egestas sed sed risus pretium quam
-		vulputate. Viverra suspendisse potenti nullam ac tortor vitae purus faucibus ornare. Fringilla
-		urna porttitor rhoncus dolor purus non. Amet dictum sit amet justo donec enim.
-	</p>
+		<section>
+			<h3>Lifestyle & Passions</h3>
+			<p>
+				五感を刺激する体験やモノへのこだわりを大切にしています。
+			</p>
+			<ul>
+				<li>
+					<strong>Audio:</strong> 音響機器の哲学と音作りに惹かれます。特に **final**、**Marshall**、**Sudio** などの製品を愛用しています。
+				</li>
+				<li>
+					<strong>Travel:</strong> 「非日常」を求めて、少し外れた場所への旅行を好みます。
+				</li>
+				<li>
+					<strong>Upcoming Plans:</strong> 2027年にはフィンランドでのオーロラとサウナ体験を計画中です。
+				</li>
+			</ul>
+		</section>
+	</div>
 
-	<p>
-		Mattis ullamcorper velit sed ullamcorper morbi tincidunt. Tortor posuere ac ut consequat semper
-		viverra. Tellus mauris a diam maecenas sed enim ut sem viverra. Venenatis urna cursus eget nunc
-		scelerisque viverra mauris in. Arcu ac tortor dignissim convallis aenean et tortor at. Curabitur
-		gravida arcu ac tortor dignissim convallis aenean et tortor. Egestas tellus rutrum tellus
-		pellentesque eu. Fusce ut placerat orci nulla pellentesque dignissim enim sit amet. Ut enim
-		blandit volutpat maecenas volutpat blandit aliquam etiam. Id donec ultrices tincidunt arcu. Id
-		cursus metus aliquam eleifend mi.
-	</p>
-
-	<p>
-		Tempus quam pellentesque nec nam aliquam sem. Risus at ultrices mi tempus imperdiet. Id porta
-		nibh venenatis cras sed felis eget velit. Ipsum a arcu cursus vitae. Facilisis magna etiam
-		tempor orci eu lobortis elementum. Tincidunt dui ut ornare lectus sit. Quisque non tellus orci
-		ac. Blandit libero volutpat sed cras. Nec tincidunt praesent semper feugiat nibh sed pulvinar
-		proin gravida. Egestas integer eget aliquet nibh praesent tristique magna.
-	</p>
+	<style>
+		.about-container h3 {
+			color: #0984e3; /* ホームと統一したアクセントカラー */
+			font-size: 1.4rem;
+			border-left: 4px solid #0984e3;
+			padding-left: 1rem;
+			margin-top: 2.5rem;
+			margin-bottom: 1rem;
+		}
+		.about-container p {
+			line-height: 1.8;
+			margin-bottom: 1rem;
+			color: #2d3436;
+		}
+		.about-container ul {
+			list-style: none;
+			padding-left: 0.5rem;
+		}
+		.about-container li {
+			margin-bottom: 0.8rem;
+			position: relative;
+			padding-left: 1.2rem;
+			font-size: 0.95rem;
+			color: #636e72;
+		}
+		.about-container li::before {
+			content: "•";
+			color: #0984e3;
+			position: absolute;
+			left: 0;
+			font-weight: bold;
+		}
+		.about-container strong {
+			color: #2d3436;
+		}
+	</style>
 </Layout>
