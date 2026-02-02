@@ -17,7 +17,7 @@ export const CATEGORIES = [
 	},
 	{
 		slug: 'ai',
-		label: 'AI',
+		label: 'Tech Lab',
 		description: '趣味でおこなう技術系の挑戦を記録します。',
 	},
 	{
