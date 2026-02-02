@@ -2,7 +2,7 @@
 import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-// ▼▼▼ CATEGORIES をインポート ▼▼▼
+// SITE_DESCRIPTION を追加でインポートして、未分類時の説明文に備えます
 import { SITE_TITLE, SITE_DESCRIPTION, CATEGORIES } from '../../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
@@ -12,18 +12,13 @@ import { Image } from 'astro:assets';
    動的ページの生成設定
    ================================================== */
 export async function getStaticPaths() {
-  // ▼▼▼ 設定ファイルに基づいてパスを生成します ▼▼▼
-  // これにより、consts.ts にカテゴリを追加するだけで、自動的にページが作られるようになります。
   return CATEGORIES.map((cat) => ({
     params: { category: cat.slug },
-    // ページ内でカテゴリの全データ（labelなど）を使えるように渡しておきます
     props: { categoryData: cat }, 
   }));
 }
 
-// URLから現在のカテゴリslugを取得
 const { category } = Astro.params;
-// getStaticPathsから渡されたカテゴリデータを取得
 const { categoryData } = Astro.props;
 
 // 全てのブログ記事を取得
@@ -34,17 +29,21 @@ const allPosts = (await getCollection('blog')).sort(
 // 現在のカテゴリと一致する記事だけを「絞り込み」
 const filteredPosts = allPosts.filter((post) => post.data.category === category);
 
-// ページのタイトルには、設定ファイルに定義されたきれいなラベル名を使用します
-const pageTitle = categoryData.label;
+/* ==================================================
+   SEO用のメタデータ生成 (ここが重要！)
+   ================================================== */
+// Google検索結果に表示されるタイトル（例：Technical Growthに関する記事一覧 | Engineer Log）
+const pageTitle = `${categoryData.label}に関する記事一覧 | ${SITE_TITLE}`;
 
+// 検索結果の下に表示される説明文（consts.tsの説明文を活用してリッチにする）
+const pageDescription = `${categoryData.label}カテゴリの学習記録とTips。${categoryData.description}`;
 ---
 
 <!doctype html>
 <html lang="ja">
 	<head>
-		<BaseHead title={`${pageTitle} | ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
+		<BaseHead title={pageTitle} description={pageDescription} />
 		<style>
-			/* CSSは blog/index.astro と共通なので省略します（同じスタイルが適用されます） */
 			:root {
 				--accent: #0984e3;
 				--accent-gradient: linear-gradient(45deg, #0984e3, #6c5ce7);
@@ -139,19 +138,19 @@ const pageTitle = categoryData.label;
 		<Header />
 		<main>
 			<section>
+				<h1 style="display:none;">{pageTitle}</h1>
+
 				<nav class="category-nav">
 					<a href="/blog/" class="cat-link">All Posts</a>
-					
 					{CATEGORIES.map((cat) => (
 						<a 
 							href={`/blog/${cat.slug}`}
-							/* 現在表示しているカテゴリと一致したら active クラスをつける */
 							class={`cat-link ${category === cat.slug ? 'active' : ''}`}
 						>
 							{cat.label}
 						</a>
 					))}
-					</nav>
+				</nav>
 
 				<ul>
 					{
@@ -160,7 +159,7 @@ const pageTitle = categoryData.label;
 								<li>
 									<a href={`/blog/${post.id}/`}>
 										{post.data.heroImage && (
-											<Image width={720} height={360} src={post.data.heroImage} alt="" class="hero-image" />
+											<Image width={720} height={360} src={post.data.heroImage} alt={post.data.title} class="hero-image" />
 										)}
 										<div style="padding: 1rem 0 0;">
 											<h4 class="title">{post.data.title}</h4>
