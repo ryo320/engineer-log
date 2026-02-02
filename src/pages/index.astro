@@ -3,6 +3,13 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+// 記事データを取得して日付順に並び替え
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+// 一番新しい記事だけを取得
+const latestPost = posts[0];
 ---
 
 <!doctype html>
@@ -18,7 +25,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 				<h1>🧑🏻‍💻 Engineer Log</h1>
 				<p class="tagline">
 					新社会人エンジニアの学びと日常。<br />
-					<span>自律システム</span>、<span>AI活用</span>、そして<span>豊かな暮らし</span>への探求。
+					<span>挑戦</span>、<span>成長</span>、そして<span>豊かな暮らし</span>への探求。
 				</p>
 			</section>
 
@@ -31,19 +38,31 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 						<p>日々の業務で触れる技術や、実務で役立つプログラミング手法をアウトプットします。</p>
 					</div>
 					<div class="card">
-						<h3>AI & Investment</h3>
-						<p>LLMの活用術や、趣味であるAIを用いた資産運用の試行錯誤を記録します。</p>
+						<h3>AI</h3>
+						<p>趣味であるAIを用いた資産運用の試行錯誤を記録します。</p>
 					</div>
 					<div class="card">
 						<h3>Lifestyle</h3>
-						<p>お気に入りの音響機器や旅行、エンジニアとしてのQOLを高めるモノ・コトについて。</p>
+						<p>お気に入りのガジェットや旅行、QOLを高めるモノ・コトについて。</p>
 					</div>
 				</div>
 			</section>
 
-			<section class="recent-posts">
-				<h2>Latest Logs / 最新の記事</h2>
-				</section>
+			<section class="latest-log-highlight">
+				<h2>Latest Log / 最新の記事</h2>
+				{latestPost ? (
+					<a href={`/blog/${latestPost.slug}/`} class="highlight-card">
+						<div class="date">
+							<FormattedDate date={latestPost.data.pubDate} />
+						</div>
+						<h3 class="title">{latestPost.data.title}</h3>
+						<p class="description">{latestPost.data.description}</p>
+						<span class="read-more">Read More →</span>
+					</a>
+				) : (
+					<p>記事がまだありません。</p>
+				)}
+			</section>
 		</main>			
 		<Footer />
 
@@ -73,14 +92,33 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 				border: 1px solid #eee;
 				border-radius: 4px;
 				box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-				transition: transform 0.2s ease;
 			}
-			.card:hover { transform: translateY(-3px); border-color: var(--accent); }
 			.card h3 { font-size: 1.1rem; margin-bottom: 0.8rem; border-bottom: 2px solid var(--accent); display: inline-block; }
 			.card p { font-size: 0.95rem; color: var(--text-sub); margin: 0; }
 			
+			/* 最新記事ハイライトのスタイル */
+			.latest-log-highlight { margin-top: 4rem; }
+			.highlight-card {
+				display: block;
+				text-decoration: none;
+				padding: 2rem;
+				background: #fdfdfd;
+				border: 1px solid var(--accent);
+				border-radius: 8px;
+				transition: all 0.2s ease;
+			}
+			.highlight-card:hover {
+				background: #ffffff;
+				box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+				transform: translateY(-2px);
+			}
+			.date { font-size: 0.8rem; color: var(--accent); font-weight: bold; }
+			.title { font-size: 1.5rem; color: var(--text-main); margin: 0.5rem 0; }
+			.description { color: var(--text-sub); font-size: 1rem; margin-bottom: 1rem; }
+			.read-more { font-size: 0.9rem; font-weight: bold; color: var(--accent); }
+
 			.divider { border: 0; border-top: 1px solid #eee; margin: 2rem 0; }
-			h2 { font-size: 1.5rem; margin-top: 3rem; margin-bottom: 1.5rem; color: var(--text-main); }
+			h2 { font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--text-main); }
 		</style>
 	</body>
 </html>
