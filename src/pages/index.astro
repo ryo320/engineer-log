@@ -6,22 +6,81 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="ja">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 	</head>
 	<body>
 		<Header />
 		<main>
-			<h1>🧑🏻‍💻 Engineer Logへようこそ</h1>
-			<p>
-				このブログでは、新社会人エンジニアとしての学びや、
-				趣味で取り組んでいるAI投資、ドローン技術などの備忘録を綴っています。
-			</p>
-			<p>
-				一歩ずつ着実に、エンジニアとしてのキャリアを積み上げていく過程を記録していきます。
-			</p>
+			<section class="hero">
+				<div class="status-badge">2026.04 / Career Start</div>
+				<h1>🧑🏻‍💻 Engineer Log</h1>
+				<p class="tagline">
+					新社会人エンジニアの学びと日常。<br />
+					<span>自律システム</span>、<span>AI活用</span>、そして<span>豊かな暮らし</span>への探求。
+				</p>
+			</section>
+
+			<hr class="divider" />
+
+			<section class="focus-areas">
+				<div class="grid">
+					<div class="card">
+						<h3>Technical Growth</h3>
+						<p>日々の業務で触れる技術や、実務で役立つプログラミング手法をアウトプットします。</p>
+					</div>
+					<div class="card">
+						<h3>AI & Investment</h3>
+						<p>LLMの活用術や、趣味であるAIを用いた資産運用の試行錯誤を記録します。</p>
+					</div>
+					<div class="card">
+						<h3>Lifestyle</h3>
+						<p>お気に入りの音響機器や旅行、エンジニアとしてのQOLを高めるモノ・コトについて。</p>
+					</div>
+				</div>
+			</section>
+
+			<section class="recent-posts">
+				<h2>Latest Logs / 最新の記事</h2>
+				</section>
 		</main>			
 		<Footer />
+
+		<style>
+			:root {
+				--text-main: #2d3436;
+				--text-sub: #636e72;
+				--accent: #0984e3; 
+			}
+			.hero { padding: 3rem 0 1.5rem; text-align: left; }
+			.status-badge {
+				display: inline-block;
+				font-size: 0.75rem;
+				font-weight: bold;
+				color: var(--accent);
+				letter-spacing: 0.1rem;
+				margin-bottom: 0.5rem;
+			}
+			h1 { font-size: 2.8rem; margin: 0; color: var(--text-main); }
+			.tagline { font-size: 1.1rem; color: var(--text-sub); line-height: 1.8; margin-top: 1rem; }
+			.tagline span { color: var(--text-main); font-weight: 600; border-bottom: 2px solid #eee; }
+			
+			.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+			.card {
+				padding: 1.5rem;
+				background: #ffffff;
+				border: 1px solid #eee;
+				border-radius: 4px;
+				box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+				transition: transform 0.2s ease;
+			}
+			.card:hover { transform: translateY(-3px); border-color: var(--accent); }
+			.card h3 { font-size: 1.1rem; margin-bottom: 0.8rem; border-bottom: 2px solid var(--accent); display: inline-block; }
+			.card p { font-size: 0.95rem; color: var(--text-sub); margin: 0; }
+			
+			.divider { border: 0; border-top: 1px solid #eee; margin: 2rem 0; }
+			h2 { font-size: 1.5rem; margin-top: 3rem; margin-bottom: 1.5rem; color: var(--text-main); }
+		</style>
 	</body>
 </html>
