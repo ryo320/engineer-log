@@ -13,7 +13,7 @@ import Layout from '../layouts/BlogPost.astro';
 		<section>
 			<h3>Profile</h3>
 			<p>
-				2026年4月よりITエンジニアとしてキャリアをスタートした新社会人です。
+				2026年4月よりITエンジニアとしてキャリアをスタートする新社会人です。
 			</p>
 			<p>
 				大学では機械学習について、大学院では自律移動システムの応用技術について研究してきました。
@@ -22,66 +22,94 @@ import Layout from '../layouts/BlogPost.astro';
 
 		<section>
 			<h3>Technical Interests</h3>
-			<ul>
-				<li><strong>Systems:</strong> 自律制御、自律移動ロボティクスのアルゴリズム。</li>
-				<li><strong>AI:</strong> LLM（ChatGPTなど）の活用や深層学習による認識技術。</li>
-				<li><strong>Development:</strong> 実務に即したプログラミング手法と開発環境の最適化。</li>
-			</ul>
+			<div class="interests-grid">
+				<div class="interest-column">
+					<h4>Past & Current</h4>
+					<ul>
+						<li>画像処理技術</li>
+						<li>AI / 深層強化学習</li>
+						<li>自律移動システム (ドローン)</li>
+					</ul>
+				</div>
+				<div class="interest-column future">
+					<h4>Future</h4>
+					<ul>
+						<li>フロントエンド開発</li>
+						<li>UI / UX デザイン</li>
+					</ul>
+				</div>
+			</div>
 		</section>
 
 		<section>
 			<h3>Lifestyle & Passions</h3>
-			<p>
-				五感を刺激する体験やモノへのこだわりを大切にしています。
-			</p>
-			<ul>
-				<li>
-					<strong>Audio:</strong> 音響機器の哲学と音作りに惹かれます。特に **final**、**Marshall**、**Sudio** などの製品を愛用しています。
-				</li>
-				<li>
-					<strong>Travel:</strong> 「非日常」を求めて、少し外れた場所への旅行を好みます。
-				</li>
-				<li>
-					<strong>Upcoming Plans:</strong> 2027年にはフィンランドでのオーロラとサウナ体験を計画中です。
-				</li>
-			</ul>
+			<div class="lifestyle-grid">
+				<div class="lifestyle-column">
+					<h4>Current Interests</h4>
+					<ul>
+						<li><strong>Travel:</strong> シンガポール, ドイツ, 台湾, イタリア, フランス, マカオ / 2027 フィンランド計画中</li>
+						<li><strong>Live:</strong> 幅広く聴くミーハー。back number, セカオワ, 米津玄師, YOASOBI, Ado, Novelbright, Vaundy, Mrs. GREEN APPLE, ずとまよ, 髭男, ヨルシカなど</li>
+						<li><strong>Running:</strong> フルマラソン完走経験あり</li>
+						<li><strong>Beer:</strong> ドイツ旅行を機に開眼。ビール工場見学が趣味</li>
+						<li><strong>Snowboard:</strong> 大学からハマり、現在は年1〜2回程度</li>
+					</ul>
+				</div>
+				<div class="lifestyle-column future">
+					<h4>Next Challenges</h4>
+					<ul>
+						<li>天体観測 / 紅茶</li>
+						<li>ゴルフ / サーフィン</li>
+						<li>ボルダリング</li>
+					</ul>
+				</div>
+			</div>
 		</section>
 	</div>
 
 	<style>
 		.about-container h3 {
-			color: #0984e3; /* ホームと統一したアクセントカラー */
-			font-size: 1.4rem;
-			border-left: 4px solid #0984e3;
-			padding-left: 1rem;
-			margin-top: 2.5rem;
+			color: #0984e3;
+			font-size: 1.3rem;
+			margin-top: 2rem;
 			margin-bottom: 1rem;
+			border-bottom: 1px solid #eee;
+			padding-bottom: 0.3rem;
 		}
-		.about-container p {
-			line-height: 1.8;
-			margin-bottom: 1rem;
+		.about-container h4 {
+			font-size: 1rem;
 			color: #2d3436;
+			margin-bottom: 0.5rem;
 		}
 		.about-container ul {
 			list-style: none;
-			padding-left: 0.5rem;
+			padding: 0;
 		}
 		.about-container li {
-			margin-bottom: 0.8rem;
-			position: relative;
-			padding-left: 1.2rem;
 			font-size: 0.95rem;
 			color: #636e72;
+			margin-bottom: 0.5rem;
+			padding-left: 1rem;
+			position: relative;
+			line-height: 1.6;
 		}
 		.about-container li::before {
 			content: "•";
 			color: #0984e3;
 			position: absolute;
 			left: 0;
-			font-weight: bold;
 		}
-		.about-container strong {
-			color: #2d3436;
+		.interests-grid, .lifestyle-grid {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 1.5rem;
+		}
+		.interest-column.future, .lifestyle-column.future {
+			padding: 0.5rem 1rem;
+			background-color: #f0f7ff;
+			border-radius: 4px;
+		}
+		@media (max-width: 600px) {
+			.interests-grid, .lifestyle-grid { grid-template-columns: 1fr; }
 		}
 	</style>
 </Layout>
