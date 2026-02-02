@@ -132,23 +132,28 @@ const latestPost = posts[0];
 			.focus-areas { margin-top: 4rem; }
 			.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
 			
-			/* =========================================
-			   PCとスマホで動きを分ける設定
-			   ========================================= */
-			
-			/* 共通：スマホのタップ時の青い枠を消す */
-			.card, .highlight-card { -webkit-tap-highlight-color: transparent; }
-
-			/* --- カテゴリカード --- */
-			.card {
-				display: block; text-decoration: none; color: inherit; padding: 1.7rem;
-				background: #ffffff; border: 1px solid rgba(0,0,0,0.05);
-				border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-				transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-				position: relative; overflow: hidden;
+			/* --- 共通のカード設定 --- */
+			.card, .highlight-card {
+				display: block;
+				text-decoration: none;
+				color: inherit;
+				background: #ffffff;
+				/* 「青いやつ（ハイライト）」を復活させるため、以前のtransparent設定を削除しました */
+				/* ブラウザ標準の挙動に任せます */
 			}
 
-			/* マウスがあるPCのみ：浮き上がる */
+			/* カテゴリカード */
+			.card {
+				padding: 1.7rem;
+				border: 1px solid rgba(0,0,0,0.05);
+				border-radius: 12px;
+				box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+				transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease, background 0.2s ease;
+				position: relative;
+				overflow: hidden;
+			}
+
+			/* マウスホバー（PC） */
 			@media (hover: hover) {
 				.card:hover {
 					transform: translateY(-7px);
@@ -158,11 +163,13 @@ const latestPost = posts[0];
 				.card:hover::after { width: 100%; }
 			}
 
-			/* スマホ＆クリック時：指で押し込む（沈む） */
+			/* 押し込む動作（PC/スマホ共通・何度でも反応するように調整） */
 			.card:active {
-				transform: scale(0.96) translateY(2px);
-				background: #fafafa;
-				transition: transform 0.1s ease;
+				/* 押し込んだ時は少し縮み、さらに青っぽい背景色をわずかにつけます */
+				transform: scale(0.94) translateY(2px) !important;
+				background: #f0f7ff; 
+				box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+				transition: transform 0.05s linear; /* 押し込む時は一瞬で */
 			}
 
 			.card::after {
@@ -172,20 +179,22 @@ const latestPost = posts[0];
 			.card h3 { font-size: 1.1rem; margin-bottom: 0.8rem; color: var(--text-main); }
 			.card p { font-size: 0.95rem; color: var(--text-sub); margin: 0; line-height: 1.6; }
 			
-			/* --- Latest Log カード --- */
+			/* Latest Log カード */
 			.latest-log-highlight { margin-top: 5rem; }
 			
 			.highlight-card {
-				display: block; text-decoration: none; padding: 2.5rem;
-				background: #ffffff; border: double 2px transparent;
+				padding: 2.5rem;
+				border: double 2px transparent;
 				border-radius: 16px;
 				background-image: linear-gradient(white, white), var(--accent-gradient);
-				background-origin: border-box; background-clip: padding-box, border-box;
+				background-origin: border-box;
+				background-clip: padding-box, border-box;
 				box-shadow: 0 8px 20px rgba(9, 132, 227, 0.08);
-				transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.5s ease-out;
+				/* 戻る時の動き（もちっとさせる） */
+				transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.5s ease-out, background 0.2s ease;
 			}
 
-			/* マウスがあるPCのみ：浮き上がる */
+			/* マウスホバー（PC） */
 			@media (hover: hover) {
 				.highlight-card:hover {
 					box-shadow: 0 25px 60px rgba(9, 132, 227, 0.3);
@@ -193,11 +202,13 @@ const latestPost = posts[0];
 				}
 			}
 
-			/* スマホ＆クリック時：指で押し込む（沈む） */
+			/* 押し込む動作（PC/スマホ共通） */
 			.highlight-card:active {
-				transform: scale(0.95) translateY(4px);
+				/* 押し込んだ時は縮む動きを最優先にするため !important を追加 */
+				transform: scale(0.94) translateY(4px) !important;
+				background: #f0f7ff;
 				box-shadow: 0 4px 10px rgba(9, 132, 227, 0.15);
-				transition: transform 0.1s ease;
+				transition: transform 0.05s linear;
 			}
 			
 			.date { font-size: 0.85rem; color: var(--accent); font-weight: bold; letter-spacing: 0.05em;}
