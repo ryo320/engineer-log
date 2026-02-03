@@ -3,10 +3,10 @@ const today = new Date();
 ---
 
 <footer>
-	&copy; {today.getFullYear()} Engineer Log. All rights reserved.
+	&copy; {today.getFullYear()} [あなたの名前]. All rights reserved.
 	<div class="social-links">
-		<a href="https://m.webtoo.ls/@astro" target="_blank">
-			<span class="sr-only">Follow Astro on Mastodon</span>
+		<a href="#!" style="cursor: default;">
+			<span class="sr-only">Mastodon (No Link)</span>
 			<svg
 				viewBox="0 0 16 16"
 				aria-hidden="true"
@@ -19,8 +19,8 @@ const today = new Date();
 				></path></svg
 			>
 		</a>
-		<a href="https://twitter.com/astrodotbuild" target="_blank">
-			<span class="sr-only">Follow Astro on Twitter</span>
+		<a href="#!" style="cursor: default;">
+			<span class="sr-only">Twitter (No Link)</span>
 			<svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" astro-icon="social/twitter"
 				><path
 					fill="currentColor"
@@ -28,8 +28,8 @@ const today = new Date();
 				></path></svg
 			>
 		</a>
-		<a href="https://github.com/withastro/astro" target="_blank">
-			<span class="sr-only">Go to Astro's GitHub repo</span>
+		<a href="https://github.com/あなたのユーザー名" target="_blank">
+			<span class="sr-only">Go to My GitHub profile</span>
 			<svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32" astro-icon="social/github"
 				><path
 					fill="currentColor"
@@ -56,6 +56,7 @@ const today = new Date();
 		text-decoration: none;
 		color: rgb(var(--gray));
 	}
+	/* ホバーした時に少しだけ色が薄くなる効果を残す */
 	.social-links a:hover {
 		color: rgb(var(--gray-dark));
 	}
