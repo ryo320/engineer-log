@@ -43,8 +43,7 @@ git push origin main
 
 6. リンクと画像
 [表示される文字](https://google.com)
-![画像の説明](../../assets/my-image.jpg)
-
+![画像の説明](../../assets/blog-placeholder-4.jpg')
 
 ## テンプレート
 ---
