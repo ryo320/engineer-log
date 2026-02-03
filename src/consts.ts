@@ -14,7 +14,7 @@ export const CATEGORIES = [
 	},
 	{
 		slug: 'technical',
-		label: 'Tech Lab',
+		label: 'Technical',
 		description: '趣味でおこなう技術系の挑戦を記録します。',
 	},
 	{
