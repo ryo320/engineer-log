@@ -11,7 +11,7 @@ const blog = defineCollection({
 			description: z.string(),
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
-			heroImage: z.string().optional(),
+			heroImage: image().optional(),
 			// ★ここが抜けていました！これを追加することで Astro がカテゴリを認識します
 			category: z.string(), 
 		}),
