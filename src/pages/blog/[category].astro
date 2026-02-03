@@ -19,6 +19,13 @@ const { categoryData } = Astro.props;
 
 // 記事を取得して「このカテゴリのものだけ」に絞り込み、新しい順に並べる
 const allPosts = await getCollection('blog');
+
+// ★ここが診断コードです！★
+// 保存した後、VSCodeのターミナル（黒い画面）を見てください。
+console.log('--- カテゴリページ診断 ---');
+console.log('現在のページカテゴリ:', category);
+console.log('全記事のカテゴリデータ:', allPosts.map(p => ({ title: p.data.title, cat: p.data.category })));
+
 const filteredPosts = allPosts
   .filter((post) => post.data.category === category)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
