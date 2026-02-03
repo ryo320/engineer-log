@@ -2,15 +2,11 @@
 import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-// SITE_DESCRIPTION を追加でインポートして、未分類時の説明文に備えます
-import { SITE_TITLE, SITE_DESCRIPTION, CATEGORIES } from '../../consts';
+import { SITE_TITLE, CATEGORIES } from '../../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 import { Image } from 'astro:assets';
 
-/* ==================================================
-   動的ページの生成設定
-   ================================================== */
 export async function getStaticPaths() {
   return CATEGORIES.map((cat) => ({
     params: { category: cat.slug },
@@ -21,163 +17,58 @@ export async function getStaticPaths() {
 const { category } = Astro.params;
 const { categoryData } = Astro.props;
 
-// 全てのブログ記事を取得
-const allPosts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
+// 記事を取得して「このカテゴリのものだけ」に絞り込み、新しい順に並べる
+const allPosts = await getCollection('blog');
+const filteredPosts = allPosts
+  .filter((post) => post.data.category === category)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-// 現在のカテゴリと一致する記事だけを「絞り込み」
-const filteredPosts = allPosts.filter((post) => post.data.category === category);
-
-/* ==================================================
-   SEO用のメタデータ生成 (ここが重要！)
-   ================================================== */
-// Google検索結果に表示されるタイトル（例：Technical Growthに関する記事一覧 | Engineer Log）
-const pageTitle = `${categoryData.label}に関する記事一覧 | ${SITE_TITLE}`;
-
-// 検索結果の下に表示される説明文（consts.tsの説明文を活用してリッチにする）
-const pageDescription = `${categoryData.label}カテゴリの学習記録とTips。${categoryData.description}`;
+const pageTitle = `${categoryData.label} | ${SITE_TITLE}`;
 ---
 
 <!doctype html>
 <html lang="ja">
 	<head>
-		<BaseHead title={pageTitle} description={pageDescription} />
+		<BaseHead title={pageTitle} description={categoryData.description} />
 		<style>
-			:root {
-				--accent: #0984e3;
-				--accent-gradient: linear-gradient(45deg, #0984e3, #6c5ce7);
-				--text-main: #2d3436;
-				--text-sub: #636e72;
-			}
-			main {
-				width: 960px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 3em 1em;
-			}
-			.category-nav {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 1rem;
-				margin-bottom: 3rem;
-				justify-content: center;
-				padding-bottom: 1.5rem;
-				border-bottom: 1px solid #eee;
-			}
-			.cat-link {
-				text-decoration: none;
-				padding: 0.5rem 1.2rem;
-				border-radius: 50px;
-				font-size: 0.95rem;
-				font-weight: 600;
-				color: var(--text-sub);
-				background: #f4f7f6;
-				transition: all 0.3s ease;
-				border: 1px solid transparent;
-			}
-			.cat-link:hover {
-				color: var(--accent);
-				background: #eef2ff;
-			}
-			.cat-link.active {
-				background: var(--accent-gradient);
-				color: white;
-				box-shadow: 0 4px 15px rgba(9, 132, 227, 0.3);
-			}
-			ul {
-				display: grid;
-				grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-				gap: 2rem;
-				list-style-type: none;
-				padding: 0;
-			}
-			li {
-				background: #fff;
-				border-radius: 12px;
-				overflow: hidden;
-				box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-				transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-				border: 1px solid rgba(0,0,0,0.05);
-			}
-			li:hover {
-				transform: translateY(-5px);
-				box-shadow: 0 12px 24px rgba(0,0,0,0.1);
-				border-color: rgba(9, 132, 227, 0.3);
-			}
-			li a {
-				display: block;
-				text-decoration: none;
-				color: inherit;
-				padding: 1.5rem;
-			}
-			.title {
-				margin: 0 0 0.5rem 0;
-				color: var(--text-main);
-				line-height: 1.4;
-				font-size: 1.25rem;
-				transition: color 0.3s ease;
-			}
-			li:hover .title {
-				color: var(--accent);
-			}
-			.date {
-				margin: 0;
-				color: var(--text-sub);
-				font-size: 0.9rem;
-			}
-			.hero-image {
-				width: 100%;
-				height: 180px;
-				object-fit: cover;
-				border-bottom: 1px solid #eee;
-			}
+			/* デザイン部分は以前のものをそのまま維持 */
+			:root { --accent: #0984e3; --accent-gradient: linear-gradient(45deg, #0984e3, #6c5ce7); }
+			main { width: 960px; max-width: calc(100% - 2em); margin: auto; padding: 3em 1em; }
+			.category-nav { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 3rem; justify-content: center; border-bottom: 1px solid #eee; padding-bottom: 1.5rem; }
+			.cat-link { text-decoration: none; padding: 0.5rem 1.2rem; border-radius: 50px; font-size: 0.95rem; font-weight: 600; color: #636e72; background: #f4f7f6; transition: all 0.3s; }
+			.cat-link.active { background: var(--accent-gradient); color: white; }
+			ul { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; list-style-type: none; padding: 0; }
+			li { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05); transition: 0.3s; }
+			li:hover { transform: translateY(-5px); }
+			li a { display: block; text-decoration: none; color: inherit; padding: 1.5rem; }
+			.hero-image { width: 100%; height: 180px; object-fit: cover; }
 		</style>
 	</head>
 	<body>
 		<Header />
 		<main>
-			<section>
-				<h1 style="display:none;">{pageTitle}</h1>
+			<nav class="category-nav">
+				<a href="/blog/" class="cat-link">All Posts</a>
+				{CATEGORIES.map((cat) => (
+					<a href={`/blog/${cat.slug}`} class={`cat-link ${category === cat.slug ? 'active' : ''}`}>{cat.label}</a>
+				))}
+			</nav>
 
-				<nav class="category-nav">
-					<a href="/blog/" class="cat-link">All Posts</a>
-					{CATEGORIES.map((cat) => (
-						<a 
-							href={`/blog/${cat.slug}`}
-							class={`cat-link ${category === cat.slug ? 'active' : ''}`}
-						>
-							{cat.label}
-						</a>
-					))}
-				</nav>
-
-				<ul>
-					{
-						filteredPosts.length > 0 ? (
-							filteredPosts.map((post) => (
-								<li>
-									<a href={`/blog/${post.id}/`}>
-										{post.data.heroImage && (
-											<Image width={720} height={360} src={post.data.heroImage} alt={post.data.title} class="hero-image" />
-										)}
-										<div style="padding: 1rem 0 0;">
-											<h4 class="title">{post.data.title}</h4>
-											<p class="date">
-												<FormattedDate date={post.data.pubDate} />
-											</p>
-										</div>
-									</a>
-								</li>
-							))
-						) : (
-							<p style="text-align: center; color: var(--text-sub); grid-column: 1 / -1;">
-								このカテゴリの記事はまだありません。
-							</p>
-						)
-					}
-				</ul>
-			</section>
+			<ul>
+				{filteredPosts.length > 0 ? (
+					filteredPosts.map((post) => (
+						<li>
+							<a href={`/blog/${post.slug}/`}>
+								{post.data.heroImage && <Image width={720} height={360} src={post.data.heroImage} alt="" class="hero-image" />}
+								<h4 style="margin-top:1rem;">{post.data.title}</h4>
+								<p style="color:#666; font-size:0.9rem;"><FormattedDate date={post.data.pubDate} /></p>
+							</a>
+						</li>
+					))
+				) : (
+					<p style="text-align:center; grid-column: 1/-1;">まだ記事がありません。</p>
+				)}
+			</ul>
 		</main>
 		<Footer />
 	</body>
