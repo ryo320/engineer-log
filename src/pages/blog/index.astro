@@ -6,7 +6,6 @@ import { SITE_TITLE, SITE_DESCRIPTION, CATEGORIES } from '../../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 import { Image } from 'astro:assets';
-// ▼ 修正：パスから "src/" を削除し、他のコンポーネントと形式を合わせました
 import Search from '../../components/Search.astro';
 
 // 1. 全記事を取得
@@ -14,7 +13,7 @@ const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 
-// 2. Supabaseから「いいね数」を全件取得
+// 2. Supabase接続情報
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
@@ -48,202 +47,245 @@ const postsWithLikes = posts.map(post => {
 		<style>
 			:root {
 				--accent: #0984e3;
-				--accent-gradient: linear-gradient(45deg, #0984e3, #6c5ce7);
-				--text-main: #2d3436;
+				--accent-gradient: linear-gradient(135deg, #0984e3, #6c5ce7);
+				--text-main: #1d1d1f;
 				--text-sub: #636e72;
+				--ui-bg: #f5f5f7;
 			}
 			main {
 				width: 960px;
 				max-width: calc(100% - 2em);
 				margin: auto;
-				padding: 3em 1em;
+				padding: 2em 1em;
 			}
-			
+
+			/* 操作ダッシュボード */
+			.blog-dashboard {
+				background: #ffffff;
+				border: 1px solid rgba(0, 0, 0, 0.06);
+				border-radius: 24px;
+				padding: 2rem;
+				margin-bottom: 4rem;
+				box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+			}
+
 			.category-nav {
 				display: flex;
 				flex-wrap: wrap;
-				gap: 1rem;
-				margin-bottom: 2rem;
+				gap: 0.8rem;
 				justify-content: center;
-				padding-bottom: 1.5rem;
+				margin-bottom: 1.5rem;
 			}
 			.cat-link {
 				text-decoration: none;
 				padding: 0.5rem 1.2rem;
 				border-radius: 50px;
-				font-size: 0.95rem;
+				font-size: 0.9rem;
 				font-weight: 600;
 				color: var(--text-sub);
-				background: #f4f7f6;
-				transition: all 0.3s ease;
-				border: 1px solid transparent;
+				background: var(--ui-bg);
+				transition: all 0.2s ease;
 			}
-			.cat-link:hover { color: var(--accent); background: #eef2ff; }
+			.cat-link:hover { color: var(--accent); }
+
+			/* ▼▼▼ 修正：アクティブ時の色を元のグラデーションに変更 ▼▼▼ */
 			.cat-link.active {
 				background: var(--accent-gradient);
 				color: white;
 				box-shadow: 0 4px 15px rgba(9, 132, 227, 0.3);
 			}
 
-			.controls-row {
+			.search-container {
+				max-width: 500px;
+				margin: 0 auto 2rem;
+			}
+
+			.sort-section {
 				display: flex;
-				justify-content: flex-end;
-				margin-bottom: 2rem;
+				justify-content: center;
 				align-items: center;
-				gap: 10px;
+				gap: 1.5rem;
+				padding-top: 1.5rem;
+				border-top: 1px solid #f2f2f2;
 			}
-			#sort-select {
-				padding: 8px 16px;
-				border-radius: 12px;
-				border: 1px solid #ddd;
-				font-size: 0.9rem;
-				font-weight: 600;
+			.sort-label {
+				font-size: 0.75rem;
+				font-weight: 800;
+				color: #b2bec3;
+				text-transform: uppercase;
+				letter-spacing: 0.1em;
+			}
+			.sort-options {
+				display: flex;
+				gap: 1rem;
+			}
+			.sort-btn {
+				border: none;
+				background: transparent;
+				padding: 4px 8px;
+				font-size: 0.85rem;
+				font-weight: 700;
+				color: var(--text-sub);
 				cursor: pointer;
-				background-color: white;
-				outline: none;
-				transition: border-color 0.2s;
+				position: relative;
+				transition: color 0.2s;
 			}
-
-			.search-wrapper {
-				margin: 0 auto 2rem auto;
-				max-width: 600px;
+			.sort-btn::after {
+				content: '';
+				position: absolute;
+				bottom: -4px;
+				left: 50%;
+				width: 0;
+				height: 2px;
+				background: var(--accent);
+				transition: all 0.3s ease;
+				transform: translateX(-50%);
 			}
-
-			.separator {
-				border: 0;
-				border-top: 1px solid #eee;
-				margin-bottom: 3rem;
-				width: 100%;
-			}
+			.sort-btn.active { color: var(--accent); }
+			.sort-btn.active::after { width: 100%; }
 
 			ul {
 				display: grid;
-				grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-				gap: 2rem;
+				grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+				gap: 2.5rem;
 				list-style-type: none;
 				padding: 0;
 			}
 			li {
 				background: #fff;
-				border-radius: 12px;
+				border-radius: 16px;
 				overflow: hidden;
-				box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-				transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-				border: 1px solid rgba(0,0,0,0.05);
+				transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 			}
-			li:hover {
-				transform: translateY(-5px);
-				box-shadow: 0 12px 24px rgba(0,0,0,0.1);
-				border-color: rgba(9, 132, 227, 0.3);
-			}
-			li a {
-				display: block;
-				text-decoration: none;
-				color: inherit;
-				padding: 1.5rem;
-			}
-			.title {
-				margin: 0 0 0.5rem 0;
-				color: var(--text-main);
-				line-height: 1.4;
-				font-size: 1.25rem;
-			}
-			.date {
-				margin: 0;
-				color: var(--text-sub);
-				font-size: 0.9rem;
-			}
-			.like-badge {
-				display: inline-block;
-				margin-top: 0.8rem;
-				padding: 2px 10px;
-				background: #eef7ff;
-				color: var(--accent);
-				border-radius: 20px;
-				font-size: 0.85rem;
-				font-weight: 700;
-			}
+			li:hover { transform: translateY(-8px); }
+			li a { display: block; text-decoration: none; color: inherit; }
+			
 			.hero-image {
 				width: 100%;
-				height: 180px;
+				height: 220px;
 				object-fit: cover;
-				border-bottom: 1px solid #eee;
+				border-radius: 20px;
+				margin-bottom: 1.2rem;
+				box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+				border: 1px solid #f0f0f0;
+			}
+			.title { margin: 0 0 0.6rem 0; color: var(--text-main); line-height: 1.4; font-size: 1.3rem; font-weight: 800; }
+			
+			.post-meta {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				margin-top: 0.5rem;
+				color: var(--text-sub);
+				font-size: 0.85rem;
+			}
+			.date { margin: 0 !important; line-height: 1; }
+			.like-badge {
+				display: inline-flex;
+				align-items: center;
+				background: rgba(9, 132, 227, 0.08);
+				color: var(--accent);
+				padding: 2px 10px;
+				border-radius: 8px;
+				font-size: 0.8rem;
+				font-weight: 800;
+			}
+
+			@media (max-width: 768px) {
+				.blog-dashboard { padding: 1.5rem; }
+				.sort-section { gap: 1rem; flex-direction: column; }
 			}
 		</style>
 	</head>
 	<body>
 		<Header />
 		<main>
-			<section>
+			<div class="blog-dashboard">
 				<nav class="category-nav">
 					<a href="/blog/" class="cat-link active">All Posts</a>
 					{CATEGORIES.map((cat) => (
-						<a href={`/blog/${cat.slug}`} class="cat-link">
-							{cat.label}
-						</a>
+						<a href={`/blog/${cat.slug}`} class="cat-link">{cat.label}</a>
 					))}
 				</nav>
 
-				<div class="search-wrapper">
+				<div class="search-container">
 					<Search />
 				</div>
 
-				<div class="controls-row">
-					<label for="sort-select" style="font-weight: 700; font-size: 0.9rem; color: var(--text-sub);">並び替え:</label>
-					<select id="sort-select">
-						<option value="date-desc">最新順</option>
-						<option value="date-asc">古い順</option>
-						<option value="likes-desc">人気順</option>
-					</select>
+				<div class="sort-section">
+					<span class="sort-label">Order By</span>
+					<div class="sort-options" id="sort-group">
+						<button class="sort-btn active" data-sort="date-desc">Newest</button>
+						<button class="sort-btn" data-sort="date-asc">Oldest</button>
+						<button class="sort-btn" data-sort="likes-desc">Popular</button>
+					</div>
 				</div>
+			</div>
 
-				<hr class="separator" />
-
-				<ul id="post-list">
-					{postsWithLikes.map((post) => (
-						<li class="post-item" 
-							data-date={post.data.pubDate.valueOf()} 
-							data-likes={post.likeCount}>
-							<a href={`/blog/${post.id}/`}>
-								{post.data.heroImage && (
-									<Image width={720} height={360} src={post.data.heroImage} alt="" class="hero-image" />
-								)}
-								<div style="padding: 1rem 0 0;">
-									<h4 class="title">{post.data.title}</h4>
+			<ul id="post-list">
+				{postsWithLikes.map((post) => (
+					<li class="post-item" data-date={post.data.pubDate.valueOf()} data-likes={post.likeCount}>
+						<a href={`/blog/${post.id}/`}>
+							{post.data.heroImage && (
+								<Image width={720} height={400} src={post.data.heroImage} alt="" class="hero-image" />
+							)}
+							<div style="padding: 0.5rem;">
+								<h4 class="title">{post.data.title}</h4>
+								<div class="post-meta">
 									<p class="date">
 										<FormattedDate date={post.data.pubDate} />
 									</p>
-									<div class="like-badge">💙 {post.likeCount} likes</div>
+									<span class="like-badge">💙 {post.likeCount} likes</span>
 								</div>
-							</a>
-						</li>
-					))}
-				</ul>
-			</section>
+							</div>
+						</a>
+					</li>
+				))}
+			</ul>
 		</main>
 		<Footer />
 
-		<script is:inline>
-			const select = document.getElementById('sort-select');
+		<script is:inline define:vars={{ supabaseUrl, supabaseKey }}>
+			const sortGroup = document.getElementById('sort-group');
+			const buttons = sortGroup.querySelectorAll('.sort-btn');
 			const list = document.getElementById('post-list');
 			const items = Array.from(list.getElementsByClassName('post-item'));
 
-			select.addEventListener('change', () => {
-				const val = select.value;
-
-				items.sort((a, b) => {
-					if (val === 'date-desc') {
-						return parseInt(b.dataset.date) - parseInt(a.dataset.date);
-					} else if (val === 'date-asc') {
-						return parseInt(a.dataset.date) - parseInt(b.dataset.date);
-					} else if (val === 'likes-desc') {
-						return parseInt(b.dataset.likes) - parseInt(a.dataset.likes);
-					}
-					return 0;
+			buttons.forEach(btn => {
+				btn.addEventListener('click', () => {
+					buttons.forEach(b => b.classList.remove('active'));
+					btn.classList.add('active');
+					const val = btn.dataset.sort;
+					items.sort((a, b) => {
+						if (val === 'date-desc') return parseInt(b.dataset.date) - parseInt(a.dataset.date);
+						if (val === 'date-asc') return parseInt(a.dataset.date) - parseInt(b.dataset.date);
+						if (val === 'likes-desc') return parseInt(b.dataset.likes) - parseInt(a.dataset.likes);
+						return 0;
+					});
+					items.forEach(item => list.appendChild(item));
 				});
-
-				items.forEach(item => list.appendChild(item));
 			});
+
+			async function refreshLikes() {
+				try {
+					const res = await fetch(`${supabaseUrl}/rest/v1/post_likes?select=slug,count`, {
+						headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}` }
+					});
+					const latestData = await res.json();
+					items.forEach(item => {
+						const link = item.querySelector('a');
+						if (!link) return;
+						const path = new URL(link.href).pathname;
+						const match = latestData.find(l => l.slug === path);
+						if (match) {
+							const badge = item.querySelector('.like-badge');
+							if (badge) badge.innerText = `💙 ${match.count} likes`;
+							item.dataset.likes = match.count;
+						}
+					});
+				} catch (e) { console.error(e); }
+			}
+			refreshLikes();
 		</script>
 	</body>
 </html>
