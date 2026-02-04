@@ -1,62 +1,163 @@
 ---
-/* src/components/LikeButton.astro */
 const { slug } = Astro.props;
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 ---
 
-<button id="like-button" data-slug={slug} class="like-btn">
-  <span class="heart">💙</span>
-  <span id="like-count">--</span>
-</button>
-
-<script is:inline define:vars={{ supabaseUrl, supabaseKey }}>
-  const btn = document.getElementById('like-button');
-  const countDisplay = document.getElementById('like-count');
-  const slug = btn.dataset.slug;
-
-  const headers = {
-    'apikey': supabaseKey,
-    'Authorization': `Bearer ${supabaseKey}`,
-    'Content-Type': 'application/json'
-  };
-
-  // 1. ページ読み込み時に現在のいいね数を取得
-  async function loadLikes() {
-    const res = await fetch(`${supabaseUrl}/rest/v1/post_likes?slug=eq.${slug}&select=count`, { headers });
-    const data = await res.json();
-    countDisplay.innerText = data[0]?.count || 0;
-  }
-
-  // 2. ボタンクリック時に「increment_like」関数を実行
-  btn.onclick = async () => {
-    btn.disabled = true;
-    try {
-      const res = await fetch(`${supabaseUrl}/rest/v1/rpc/increment_like`, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({ target_slug: slug })
-      });
-      const newCount = await res.json();
-      countDisplay.innerText = newCount;
-    } finally {
-      btn.disabled = false;
-    }
-  };
-
-  loadLikes();
-</script>
+<div class="like-container">
+  <button id="like-button" data-slug={slug} aria-label="Toggle like">
+    <div class="icon-box">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="heart-icon">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+    </div>
+    <span id="like-count">0</span>
+  </button>
+  <div class="msg-wrapper">
+    <p class="thanks-msg">Thank you!!</p>
+  </div>
+</div>
 
 <style>
-  .like-btn {
-    background: white;
-    border: 2px solid #0984e3;
-    border-radius: 20px;
-    padding: 5px 15px;
-    cursor: pointer;
-    font-weight: bold;
-    color: #0984e3;
-    transition: transform 0.1s;
+  :root {
+    --btn-bg-off: #f8faff;
+    --btn-border-off: #e1e7f0;
+    --accent: #0984e3;
+    --accent-gradient: linear-gradient(135deg, #0984e3, #6c5ce7);
   }
-  .like-btn:active { transform: scale(0.95); }
+
+  .like-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0.1rem 0;
+  }
+
+  #like-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 20px;
+    border-radius: 50px;
+    background: var(--btn-bg-off);
+    border: 2px solid var(--btn-border-off);
+    color: #4a5568;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  /* ホバー時（未いいねの場合） */
+  #like-button:hover:not(.is-liked) {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* いいね済みのリッチな状態 */
+  #like-button.is-liked {
+    background: var(--accent-gradient);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 10px 25px rgba(9, 132, 227, 0.3);
+  }
+
+  .heart-icon {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.5px;
+    transition: all 0.3s ease;
+  }
+
+  #like-button.is-liked .heart-icon {
+    fill: white;
+  }
+
+  .msg-wrapper { height: 20px; margin-top: 8px; }
+  .thanks-msg {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    opacity: 0;
+    transform: translateY(5px);
+    transition: all 0.4s ease;
+    margin: 0;
+  }
+  .thanks-msg.show { opacity: 1; transform: translateY(0); }
 </style>
+
+<script>
+  import { createClient } from '@supabase/supabase-js';
+
+  const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+  const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  const btn = document.getElementById('like-button');
+  const countDisplay = document.getElementById('like-count');
+  const thanksMsg = document.querySelector('.thanks-msg');
+  const slug = btn?.dataset.slug;
+
+  if (btn && slug) {
+    // 1. ブラウザ保存データから初期状態を復元
+    if (localStorage.getItem(`liked-${slug}`)) {
+      btn.classList.add('is-liked');
+    }
+
+    // 2. ページ読み込み時にDBから最新数を取得
+    const updateDisplay = async () => {
+      const { data, error } = await supabase
+        .from('post_likes')
+        .select('count')
+        .eq('slug', slug)
+        .single();
+      if (!error && data) {
+        countDisplay.innerText = data.count;
+      }
+    };
+    updateDisplay();
+
+    // 3. クリックイベント（トグル処理）
+    btn.addEventListener('click', async () => {
+      // 現在の状態をチェック
+      const isCurrentlyLiked = btn.classList.contains('is-liked');
+
+      if (!isCurrentlyLiked) {
+        // --- 【いいねを付ける】 ---
+        btn.classList.add('is-liked');
+        thanksMsg.classList.add('show');
+        localStorage.setItem(`liked-${slug}`, 'true');
+
+        // DBの数値を増やす関数を呼び出し
+        const { data, error } = await supabase.rpc('increment_likes', { post_slug: slug });
+        if (!error && data !== null) {
+          countDisplay.innerText = data;
+        }
+
+        // 2秒後にメッセージを隠す
+        setTimeout(() => thanksMsg.classList.remove('show'), 2000);
+
+      } else {
+        // --- 【いいねを取り消す】 ---
+        btn.classList.remove('is-liked');
+        thanksMsg.classList.remove('show'); // 取り消し時は即座に消す
+        localStorage.removeItem(`liked-${slug}`);
+
+        // DBの数値を減らす関数を呼び出し
+        const { data, error } = await supabase.rpc('decrement_likes', { post_slug: slug });
+        if (!error && data !== null) {
+          countDisplay.innerText = data;
+        }
+      }
+
+      // 共通のアニメーション（ポヨンと弾む）
+      btn.animate([
+        { transform: 'scale(1)' },
+        { transform: 'scale(1.15)' },
+        { transform: 'scale(1)' }
+      ], { duration: 300, easing: 'ease-out' });
+    });
+  }
+</script>
