@@ -5,22 +5,26 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
-// ▼▼▼ 追加：Commentsコンポーネントをインポート ▼▼▼
 import Comments from '../components/Comments.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 
-// ▼▼▼ 追加：Cusdisに必要な情報を取得 ▼▼▼
 const url = Astro.url.href;
 const id = Astro.url.pathname;
 ---
 
-<html lang="ja"> <head>
+<html lang="ja"> 
+	<head>
 		<BaseHead title={title} description={description} />
-		<style>
-			/* 既存のスタイル ... */
+		<style is:global>
+			/* ▼▼▼ 最強の流体タイポグラフィ設定 ▼▼▼ */
+			:root {
+				/* 画面幅（vw）に連動してベースサイズを 15px〜18px の間で動的に計算します */
+				font-size: clamp(15px, 0.4vw + 13.5px, 18px);
+			}
+
 			main {
 				width: calc(100% - 2em);
 				max-width: 100%;
@@ -35,22 +39,42 @@ const id = Astro.url.pathname;
 				border-radius: 12px;
 				box-shadow: var(--box-shadow);
 			}
+
+			/* 記事全体の文字サイズをルート(rem)に同期 */
 			.prose {
 				width: 720px;
 				max-width: calc(100% - 2em);
 				margin: auto;
 				padding: 1em;
 				color: rgb(var(--gray-dark));
+				font-size: 1rem; /* ベースサイズ */
+				line-height: 1.8;
 			}
+
+			/* タイトルと見出しの比率を固定。ベースが縮めばこれらも比例して縮みます */
 			.title {
-				margin-bottom: 1em;
+				margin-bottom: 2em;
 				padding: 1em 0;
 				text-align: center;
-				line-height: 1;
+				line-height: 1.2;
 			}
 			.title h1 {
 				margin: 0 0 0.5em 0;
+				font-size: 2.8rem; /* タイトルは常に本文の2.8倍 */
+				font-weight: 900;
+				color: #2d3436;
 			}
+
+			/* 本文内の見出し比率 */
+			.prose h2 {
+				font-size: 1.8rem; /* 見出し2は1.8倍 */
+				margin: 2.5rem 0 1rem;
+			}
+			.prose h3 {
+				font-size: 1.4rem; /* 見出し3は1.4倍 */
+				margin: 2rem 0 1rem;
+			}
+
 			.date {
 				margin-bottom: 0.5em;
 				color: rgb(var(--gray));
@@ -59,11 +83,23 @@ const id = Astro.url.pathname;
 				font-style: italic;
 			}
 			
-			/* コメント欄の前の線を少しおしゃれに */
 			.comment-divider {
 				border: 0;
 				border-top: 1px solid #eee;
 				margin: 4rem 0 2rem;
+			}
+
+			/* スマホでの微調整：
+			   フルイド設定により自動で縮みますが、
+			   タイトルが長すぎる場合の改行の美しさだけ担保します */
+			@media (max-width: 768px) {
+				.title h1 {
+					line-height: 1.3;
+					padding: 0 0.2rem;
+				}
+				.prose {
+					padding: 0.5em; /* スマホでは横の余白を少し詰めて可読性アップ */
+				}
 			}
 		</style>
 	</head>
@@ -91,8 +127,7 @@ const id = Astro.url.pathname;
 						<hr />
 					</div>
 					<slot />
-					
-					</div>
+				</div>
 			</article>
 
 			<div class="prose">
