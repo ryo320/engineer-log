@@ -17,7 +17,7 @@ const { title, id, url } = Astro.props;
         </div>
         <div class="header-title-group">
           <h3>Discussion</h3>
-          <p>感想やコメントをお待ちしています</p>
+          <p>感想やコメントをお待ちしています。</p>
         </div>
       </div>
 
@@ -94,17 +94,19 @@ const { title, id, url } = Astro.props;
     }
   }
 
+  /* ▼ 修正点：アイコンとテキストを常に横並びにする ▼ */
   .comments-header {
     display: flex;
-    align-items: center; 
+    align-items: center; /* 垂直方向の中央揃え */
     gap: 1.2rem;
     margin-bottom: 2.5rem;
   }
 
   @media (max-width: 768px) {
     .comments-header {
-      gap: 1rem;
+      gap: 1rem; /* スマホでは間隔を少しだけ詰める */
       margin-bottom: 1.8rem;
+      /* スマホでも flex-direction: column にせず横並びを維持 */
     }
   }
 
@@ -133,33 +135,19 @@ const { title, id, url } = Astro.props;
     height: 22px;
   }
 
-  /* ▼▼▼ 修正点：テキストグループの垂直位置を微調整 ▼▼▼ */
-  .header-title-group {
-    display: flex;
-    flex-direction: column;
-    /* PCでの視覚的センターを出すために4px下げる */
-    padding-top: 4px; 
-  }
-
-  @media (max-width: 768px) {
-    .header-title-group {
-      /* スマホでは文字の詰まり具合に合わせて5px下げる */
-      padding-top: 5px; 
-    }
-  }
-
+  /* ▼ 修正点：文字サイズをさらに一段階大きく拡大 ▼ */
   .header-title-group h3 {
     margin: 0;
-    font-size: 1.6rem;
+    font-size: 1.6rem; /* 1.6remからさらに拡大 */
     font-weight: 900;
     color: #1a1a1a;
-    line-height: 1.1; /* 行間を詰め気味にして位置を安定させる */
+    line-height: 1.2;
     letter-spacing: -0.02em;
   }
 
   @media (max-width: 768px) {
     .header-title-group h3 {
-      font-size: 1.5rem;
+      font-size: 1.5rem; /* スマホでも見出しとして十分なサイズを確保 */
     }
   }
 
