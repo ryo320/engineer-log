@@ -1,7 +1,7 @@
 ---
 title: 'ブログの書き方について学ぶ'
 description: 'ブログの書き方のフォーマットを作成しながら学んでいく'
-pubDate: 'Feb 04 2026'
+pubDate: '2026-02-04'
 heroImage: '../../assets/blog-placeholder-4.jpg'
 category: 'journal' # journal, technical, lifestyle, other
 ---

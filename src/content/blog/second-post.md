@@ -1,7 +1,7 @@
 ---
 title: '２回目投稿'
 description: 'ブログ作成難しすぎる'
-pubDate: 'Feb 03 2026'
+pubDate: '2026-02-03'
 heroImage: '../../assets/blog-placeholder-2.jpg'
 category: 'other'
 ---
