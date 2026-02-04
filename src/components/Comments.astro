@@ -1,0 +1,27 @@
+---
+/* src/components/Comments.astro */
+const { title, id, url } = Astro.props;
+---
+
+<div id="cusdis_thread"
+  data-host="https://cusdis.com"
+  data-app-id="de7cac4e-cb61-4ad2-b7c1-11bab18a1fd1"
+  data-page-id={id}
+  data-page-url={url}
+  data-page-title={title}
+  data-theme="auto"
+  data-lang="ja"
+></div>
+
+<script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
+
+<style>
+  /* 検索バーのデザインと統一感を持たせるスタイル */
+  #cusdis_thread {
+    margin-top: 4rem;
+    padding: 2rem;
+    background: #f9fbfd;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+  }
+</style>

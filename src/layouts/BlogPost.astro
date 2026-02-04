@@ -5,17 +5,22 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+// ▼▼▼ 追加：Commentsコンポーネントをインポート ▼▼▼
+import Comments from '../components/Comments.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+
+// ▼▼▼ 追加：Cusdisに必要な情報を取得 ▼▼▼
+const url = Astro.url.href;
+const id = Astro.url.pathname;
 ---
 
-<html lang="en">
-	<head>
+<html lang="ja"> <head>
 		<BaseHead title={title} description={description} />
 		<style>
-			/* スタイル部分は変更なし */
+			/* 既存のスタイル ... */
 			main {
 				width: calc(100% - 2em);
 				max-width: 100%;
@@ -53,6 +58,13 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 			.last-updated-on {
 				font-style: italic;
 			}
+			
+			/* コメント欄の前の線を少しおしゃれに */
+			.comment-divider {
+				border: 0;
+				border-top: 1px solid #eee;
+				margin: 4rem 0 2rem;
+			}
 		</style>
 	</head>
 
@@ -79,8 +91,17 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 						<hr />
 					</div>
 					<slot />
-				</div>
+					
+					</div>
 			</article>
+
+			<div class="prose">
+				<hr class="comment-divider" />
+				<section>
+					<h3 style="margin-bottom: 1.5rem;">Comments</h3>
+					<Comments title={title} id={id} url={url} />
+				</section>
+			</div>
 		</main>
 		<Footer />
 	</body>
