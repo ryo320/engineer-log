@@ -6,11 +6,39 @@ import { SITE_TITLE, SITE_DESCRIPTION, CATEGORIES } from '../../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 import { Image } from 'astro:assets';
-import Search from '../../src/components/Search.astro';
+// ▼ 修正：パスから "src/" を削除し、他のコンポーネントと形式を合わせました
+import Search from '../../components/Search.astro';
 
+// 1. 全記事を取得
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
+
+// 2. Supabaseから「いいね数」を全件取得
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+
+let likesData = [];
+try {
+  const res = await fetch(`${supabaseUrl}/rest/v1/post_likes?select=slug,count`, {
+    headers: {
+      'apikey': supabaseKey,
+      'Authorization': `Bearer ${supabaseKey}`
+    }
+  });
+  likesData = await res.json();
+} catch (e) {
+  console.error("Supabaseからのデータ取得に失敗しました:", e);
+}
+
+// 3. 記事データにいいね数を紐付け
+const postsWithLikes = posts.map(post => {
+  const match = likesData.find(l => l.slug === `/blog/${post.id}/`);
+  return {
+    ...post,
+    likeCount: match ? match.count : 0
+  };
+});
 ---
 
 <!doctype html>
@@ -35,7 +63,7 @@ const posts = (await getCollection('blog')).sort(
 				display: flex;
 				flex-wrap: wrap;
 				gap: 1rem;
-				margin-bottom: 2rem; /* 検索窓との間隔 */
+				margin-bottom: 2rem;
 				justify-content: center;
 				padding-bottom: 1.5rem;
 			}
@@ -50,23 +78,37 @@ const posts = (await getCollection('blog')).sort(
 				transition: all 0.3s ease;
 				border: 1px solid transparent;
 			}
-			.cat-link:hover {
-				color: var(--accent);
-				background: #eef2ff;
-			}
+			.cat-link:hover { color: var(--accent); background: #eef2ff; }
 			.cat-link.active {
 				background: var(--accent-gradient);
 				color: white;
 				box-shadow: 0 4px 15px rgba(9, 132, 227, 0.3);
 			}
 
-			/* 検索バーのスタイル */
+			.controls-row {
+				display: flex;
+				justify-content: flex-end;
+				margin-bottom: 2rem;
+				align-items: center;
+				gap: 10px;
+			}
+			#sort-select {
+				padding: 8px 16px;
+				border-radius: 12px;
+				border: 1px solid #ddd;
+				font-size: 0.9rem;
+				font-weight: 600;
+				cursor: pointer;
+				background-color: white;
+				outline: none;
+				transition: border-color 0.2s;
+			}
+
 			.search-wrapper {
 				margin: 0 auto 2rem auto;
 				max-width: 600px;
 			}
 
-			/* 薄い横線 */
 			.separator {
 				border: 0;
 				border-top: 1px solid #eee;
@@ -105,15 +147,21 @@ const posts = (await getCollection('blog')).sort(
 				color: var(--text-main);
 				line-height: 1.4;
 				font-size: 1.25rem;
-				transition: color 0.3s ease;
-			}
-			li:hover .title {
-				color: var(--accent);
 			}
 			.date {
 				margin: 0;
 				color: var(--text-sub);
 				font-size: 0.9rem;
+			}
+			.like-badge {
+				display: inline-block;
+				margin-top: 0.8rem;
+				padding: 2px 10px;
+				background: #eef7ff;
+				color: var(--accent);
+				border-radius: 20px;
+				font-size: 0.85rem;
+				font-weight: 700;
 			}
 			.hero-image {
 				width: 100%;
@@ -140,11 +188,22 @@ const posts = (await getCollection('blog')).sort(
 					<Search />
 				</div>
 
+				<div class="controls-row">
+					<label for="sort-select" style="font-weight: 700; font-size: 0.9rem; color: var(--text-sub);">並び替え:</label>
+					<select id="sort-select">
+						<option value="date-desc">最新順</option>
+						<option value="date-asc">古い順</option>
+						<option value="likes-desc">人気順</option>
+					</select>
+				</div>
+
 				<hr class="separator" />
 
-				<ul>
-					{posts.map((post) => (
-						<li>
+				<ul id="post-list">
+					{postsWithLikes.map((post) => (
+						<li class="post-item" 
+							data-date={post.data.pubDate.valueOf()} 
+							data-likes={post.likeCount}>
 							<a href={`/blog/${post.id}/`}>
 								{post.data.heroImage && (
 									<Image width={720} height={360} src={post.data.heroImage} alt="" class="hero-image" />
@@ -154,6 +213,7 @@ const posts = (await getCollection('blog')).sort(
 									<p class="date">
 										<FormattedDate date={post.data.pubDate} />
 									</p>
+									<div class="like-badge">💙 {post.likeCount} likes</div>
 								</div>
 							</a>
 						</li>
@@ -162,5 +222,28 @@ const posts = (await getCollection('blog')).sort(
 			</section>
 		</main>
 		<Footer />
+
+		<script is:inline>
+			const select = document.getElementById('sort-select');
+			const list = document.getElementById('post-list');
+			const items = Array.from(list.getElementsByClassName('post-item'));
+
+			select.addEventListener('change', () => {
+				const val = select.value;
+
+				items.sort((a, b) => {
+					if (val === 'date-desc') {
+						return parseInt(b.dataset.date) - parseInt(a.dataset.date);
+					} else if (val === 'date-asc') {
+						return parseInt(a.dataset.date) - parseInt(b.dataset.date);
+					} else if (val === 'likes-desc') {
+						return parseInt(b.dataset.likes) - parseInt(a.dataset.likes);
+					}
+					return 0;
+				});
+
+				items.forEach(item => list.appendChild(item));
+			});
+		</script>
 	</body>
 </html>

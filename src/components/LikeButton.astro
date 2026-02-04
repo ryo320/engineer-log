@@ -1,0 +1,62 @@
+---
+/* src/components/LikeButton.astro */
+const { slug } = Astro.props;
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+---
+
+<button id="like-button" data-slug={slug} class="like-btn">
+  <span class="heart">💙</span>
+  <span id="like-count">--</span>
+</button>
+
+<script is:inline define:vars={{ supabaseUrl, supabaseKey }}>
+  const btn = document.getElementById('like-button');
+  const countDisplay = document.getElementById('like-count');
+  const slug = btn.dataset.slug;
+
+  const headers = {
+    'apikey': supabaseKey,
+    'Authorization': `Bearer ${supabaseKey}`,
+    'Content-Type': 'application/json'
+  };
+
+  // 1. ページ読み込み時に現在のいいね数を取得
+  async function loadLikes() {
+    const res = await fetch(`${supabaseUrl}/rest/v1/post_likes?slug=eq.${slug}&select=count`, { headers });
+    const data = await res.json();
+    countDisplay.innerText = data[0]?.count || 0;
+  }
+
+  // 2. ボタンクリック時に「increment_like」関数を実行
+  btn.onclick = async () => {
+    btn.disabled = true;
+    try {
+      const res = await fetch(`${supabaseUrl}/rest/v1/rpc/increment_like`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ target_slug: slug })
+      });
+      const newCount = await res.json();
+      countDisplay.innerText = newCount;
+    } finally {
+      btn.disabled = false;
+    }
+  };
+
+  loadLikes();
+</script>
+
+<style>
+  .like-btn {
+    background: white;
+    border: 2px solid #0984e3;
+    border-radius: 20px;
+    padding: 5px 15px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #0984e3;
+    transition: transform 0.1s;
+  }
+  .like-btn:active { transform: scale(0.95); }
+</style>
