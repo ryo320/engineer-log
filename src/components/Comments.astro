@@ -45,10 +45,8 @@ const { title, id, url } = Astro.props;
 
   .comments-wrapper {
     position: relative;
-    /* ▼ 修正点：マージンを大幅に縮小（8rem -> 1rem） */
     margin: 1rem auto 4rem;
     max-width: 850px;
-    /* スマホで左右の余白を最小限にして、入力欄の幅を稼ぐ */
     width: 95%;
   }
 
@@ -90,32 +88,32 @@ const { title, id, url } = Astro.props;
     padding: 3.5rem 3rem;
   }
 
-  /* 【スマホ対応：改行を防ぐためのパディング最小化】 */
   @media (max-width: 768px) {
     .comments-content {
-      /* 左右のパディングを 1rem まで削り、iframe内の(optional)が横に並ぶスペースを確保 */
-      padding: 2rem 1rem; 
+      padding: 2rem 1.2rem; 
     }
   }
 
+  /* ▼ 修正点：アイコンとテキストを常に横並びにする ▼ */
   .comments-header {
     display: flex;
-    align-items: flex-start;
-    gap: 1.5rem;
+    align-items: center; /* 垂直方向の中央揃え */
+    gap: 1.2rem;
     margin-bottom: 2.5rem;
   }
+
   @media (max-width: 768px) {
     .comments-header {
-      flex-direction: column;
-      gap: 0.8rem;
-      margin-bottom: 1.5rem;
+      gap: 1rem; /* スマホでは間隔を少しだけ詰める */
+      margin-bottom: 1.8rem;
+      /* スマホでも flex-direction: column にせず横並びを維持 */
     }
   }
 
   .visual-box {
     position: relative;
-    width: 50px;
-    height: 50px;
+    width: 54px;
+    height: 54px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -125,7 +123,7 @@ const { title, id, url } = Astro.props;
   .icon-ring {
     position: absolute;
     inset: 0;
-    border-radius: 14px;
+    border-radius: 16px;
     background: linear-gradient(135deg, rgba(9, 132, 227, 0.15) 0%, rgba(108, 92, 231, 0.05) 100%);
     border: 1px solid rgba(9, 132, 227, 0.2);
   }
@@ -133,26 +131,31 @@ const { title, id, url } = Astro.props;
   .header-svg {
     position: relative;
     color: var(--theme-blue);
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
   }
 
+  /* ▼ 修正点：文字サイズをさらに一段階大きく拡大 ▼ */
   .header-title-group h3 {
     margin: 0;
-    font-size: 1.6rem;
+    font-size: 1.6rem; /* 1.6remからさらに拡大 */
     font-weight: 900;
     color: #1a1a1a;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
   }
+
   @media (max-width: 768px) {
     .header-title-group h3 {
-      font-size: 1.3rem;
+      font-size: 1.5rem; /* スマホでも見出しとして十分なサイズを確保 */
     }
   }
 
   .header-title-group p {
-    margin: 0.2rem 0 0;
-    font-size: 0.9rem;
-    color: #718096;
+    margin: 0.1rem 0 0;
+    font-size: 0.95rem;
+    color: #636e72;
+    font-weight: 500;
   }
 
   #cusdis_thread {
