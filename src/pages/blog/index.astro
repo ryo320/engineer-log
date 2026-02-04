@@ -2,13 +2,12 @@
 import BaseHead from '../../components/BaseHead.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-// ▼▼▼ CATEGORIES をインポート ▼▼▼
 import { SITE_TITLE, SITE_DESCRIPTION, CATEGORIES } from '../../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 import { Image } from 'astro:assets';
+import Search from '../../src/components/Search.astro';
 
-// 全てのブログ記事を取得し、新しい順に並び替え
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
@@ -32,15 +31,13 @@ const posts = (await getCollection('blog')).sort(
 				padding: 3em 1em;
 			}
 			
-			/* カテゴリナビゲーション */
 			.category-nav {
 				display: flex;
 				flex-wrap: wrap;
 				gap: 1rem;
-				margin-bottom: 3rem;
+				margin-bottom: 2rem; /* 検索窓との間隔 */
 				justify-content: center;
 				padding-bottom: 1.5rem;
-				border-bottom: 1px solid #eee;
 			}
 			.cat-link {
 				text-decoration: none;
@@ -57,14 +54,26 @@ const posts = (await getCollection('blog')).sort(
 				color: var(--accent);
 				background: #eef2ff;
 			}
-			/* 現在のページを強調するスタイル */
 			.cat-link.active {
 				background: var(--accent-gradient);
 				color: white;
 				box-shadow: 0 4px 15px rgba(9, 132, 227, 0.3);
 			}
 
-			/* 記事リストスタイル */
+			/* 検索バーのスタイル */
+			.search-wrapper {
+				margin: 0 auto 2rem auto;
+				max-width: 600px;
+			}
+
+			/* 薄い横線 */
+			.separator {
+				border: 0;
+				border-top: 1px solid #eee;
+				margin-bottom: 3rem;
+				width: 100%;
+			}
+
 			ul {
 				display: grid;
 				grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -120,13 +129,18 @@ const posts = (await getCollection('blog')).sort(
 			<section>
 				<nav class="category-nav">
 					<a href="/blog/" class="cat-link active">All Posts</a>
-					
 					{CATEGORIES.map((cat) => (
 						<a href={`/blog/${cat.slug}`} class="cat-link">
 							{cat.label}
 						</a>
 					))}
-					</nav>
+				</nav>
+
+				<div class="search-wrapper">
+					<Search />
+				</div>
+
+				<hr class="separator" />
 
 				<ul>
 					{posts.map((post) => (
