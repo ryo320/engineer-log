@@ -17,7 +17,7 @@ const { title, id, url } = Astro.props;
         </div>
         <div class="header-title-group">
           <h3>Join the Discussion</h3>
-          <p>研究へのフィードバックや、旅の感想もお待ちしています</p>
+          <p>技術的な議論や旅の感想をお待ちしています</p>
         </div>
       </div>
 
@@ -43,12 +43,13 @@ const { title, id, url } = Astro.props;
     --card-bg: #ffffff;
   }
 
-  /* 外枠のレスポンシブ対応 */
   .comments-wrapper {
     position: relative;
-    margin: 6rem auto 4rem;
+    /* ▼ 修正点：マージンを大幅に縮小（8rem -> 1rem） */
+    margin: 1rem auto 4rem;
     max-width: 850px;
-    width: calc(100% - 2rem); /* スマホで画面端にピッタリくっつかないように調整 */
+    /* スマホで左右の余白を最小限にして、入力欄の幅を稼ぐ */
+    width: 95%;
   }
 
   .bg-glow {
@@ -67,7 +68,7 @@ const { title, id, url } = Astro.props;
     position: relative;
     z-index: 1;
     background: var(--card-bg);
-    border-radius: 28px;
+    border-radius: 24px;
     border: 1px solid rgba(9, 132, 227, 0.12);
     box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
     overflow: hidden;
@@ -85,35 +86,36 @@ const { title, id, url } = Astro.props;
     100% { background-position: 200% 50%; }
   }
 
-  /* 【スマホ対応：パディングの調整】 */
   .comments-content {
-    padding: 4rem 3.5rem;
+    padding: 3.5rem 3rem;
   }
+
+  /* 【スマホ対応：改行を防ぐためのパディング最小化】 */
   @media (max-width: 768px) {
     .comments-content {
-      padding: 2.5rem 1.5rem; /* スマホでは余白を狭くする */
+      /* 左右のパディングを 1rem まで削り、iframe内の(optional)が横に並ぶスペースを確保 */
+      padding: 2rem 1rem; 
     }
   }
 
-  /* 【スマホ対応：ヘッダーの調整】 */
   .comments-header {
     display: flex;
     align-items: flex-start;
-    gap: 1.8rem;
-    margin-bottom: 4rem;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
   }
   @media (max-width: 768px) {
     .comments-header {
-      flex-direction: column; /* スマホではアイコンと文字を縦に並べる */
-      gap: 1rem;
-      margin-bottom: 2.5rem;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
     }
   }
 
   .visual-box {
     position: relative;
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -123,7 +125,7 @@ const { title, id, url } = Astro.props;
   .icon-ring {
     position: absolute;
     inset: 0;
-    border-radius: 18px;
+    border-radius: 14px;
     background: linear-gradient(135deg, rgba(9, 132, 227, 0.15) 0%, rgba(108, 92, 231, 0.05) 100%);
     border: 1px solid rgba(9, 132, 227, 0.2);
   }
@@ -131,23 +133,28 @@ const { title, id, url } = Astro.props;
   .header-svg {
     position: relative;
     color: var(--theme-blue);
+    width: 20px;
+    height: 20px;
   }
 
-  /* 【スマホ対応：文字サイズの調整】 */
   .header-title-group h3 {
     margin: 0;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: 900;
     color: #1a1a1a;
-    letter-spacing: -0.04em;
   }
   @media (max-width: 768px) {
     .header-title-group h3 {
-      font-size: 1.4rem; /* スマホではタイトルを少し小さく */
+      font-size: 1.3rem;
     }
   }
 
-  /* 高さの確保 */
+  .header-title-group p {
+    margin: 0.3rem 0 0;
+    font-size: 0.9rem;
+    color: #718096;
+  }
+
   #cusdis_thread {
     min-height: 650px; 
     width: 100%;
