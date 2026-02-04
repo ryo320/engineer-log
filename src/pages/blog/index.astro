@@ -8,35 +8,26 @@ import FormattedDate from '../../components/FormattedDate.astro';
 import { Image } from 'astro:assets';
 import Search from '../../components/Search.astro';
 
-// 1. 全記事を取得
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 
-// 2. Supabase接続情報
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
 let likesData = [];
 try {
   const res = await fetch(`${supabaseUrl}/rest/v1/post_likes?select=slug,count`, {
-    headers: {
-      'apikey': supabaseKey,
-      'Authorization': `Bearer ${supabaseKey}`
-    }
+    headers: { 'apikey': supabaseKey, 'Authorization': `Bearer ${supabaseKey}` }
   });
   likesData = await res.json();
 } catch (e) {
-  console.error("Supabaseからのデータ取得に失敗しました:", e);
+  console.error("Supabaseデータの取得失敗:", e);
 }
 
-// 3. 記事データにいいね数を紐付け
 const postsWithLikes = posts.map(post => {
   const match = likesData.find(l => l.slug === `/blog/${post.id}/`);
-  return {
-    ...post,
-    likeCount: match ? match.count : 0
-  };
+  return { ...post, likeCount: match ? match.count : 0 };
 });
 ---
 
@@ -49,8 +40,9 @@ const postsWithLikes = posts.map(post => {
 				--accent: #0984e3;
 				--accent-gradient: linear-gradient(135deg, #0984e3, #6c5ce7);
 				--text-main: #1d1d1f;
-				--text-sub: #636e72;
+				--text-sub: #86868b;
 				--ui-bg: #f5f5f7;
+				--card-border: #f0f0f0;
 			}
 			main {
 				width: 960px;
@@ -59,136 +51,119 @@ const postsWithLikes = posts.map(post => {
 				padding: 2em 1em;
 			}
 
-			/* 操作ダッシュボード */
 			.blog-dashboard {
 				background: #ffffff;
-				border: 1px solid rgba(0, 0, 0, 0.06);
+				border: 1px solid rgba(0, 0, 0, 0.05);
 				border-radius: 24px;
 				padding: 2rem;
 				margin-bottom: 4rem;
-				box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+				box-shadow: 0 2px 15px rgba(0, 0, 0, 0.02);
 			}
 
-			.category-nav {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 0.8rem;
-				justify-content: center;
-				margin-bottom: 1.5rem;
-			}
+			.category-nav { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; margin-bottom: 1.5rem; }
 			.cat-link {
-				text-decoration: none;
-				padding: 0.5rem 1.2rem;
-				border-radius: 50px;
-				font-size: 0.9rem;
-				font-weight: 600;
-				color: var(--text-sub);
-				background: var(--ui-bg);
-				transition: all 0.2s ease;
+				text-decoration: none; padding: 0.5rem 1.2rem; border-radius: 50px; font-size: 0.9rem;
+				font-weight: 600; color: var(--text-sub); background: var(--ui-bg); transition: all 0.2s ease;
 			}
-			.cat-link:hover { color: var(--accent); }
+			.cat-link.active { background: var(--accent-gradient); color: white; box-shadow: 0 4px 12px rgba(9, 132, 227, 0.2); }
 
-			/* ▼▼▼ 修正：アクティブ時の色を元のグラデーションに変更 ▼▼▼ */
-			.cat-link.active {
-				background: var(--accent-gradient);
-				color: white;
-				box-shadow: 0 4px 15px rgba(9, 132, 227, 0.3);
-			}
-
-			.search-container {
-				max-width: 500px;
-				margin: 0 auto 2rem;
-			}
-
-			.sort-section {
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				gap: 1.5rem;
-				padding-top: 1.5rem;
-				border-top: 1px solid #f2f2f2;
-			}
-			.sort-label {
-				font-size: 0.75rem;
-				font-weight: 800;
-				color: #b2bec3;
-				text-transform: uppercase;
-				letter-spacing: 0.1em;
-			}
-			.sort-options {
-				display: flex;
-				gap: 1rem;
-			}
-			.sort-btn {
-				border: none;
-				background: transparent;
-				padding: 4px 8px;
-				font-size: 0.85rem;
-				font-weight: 700;
-				color: var(--text-sub);
-				cursor: pointer;
-				position: relative;
-				transition: color 0.2s;
-			}
-			.sort-btn::after {
-				content: '';
-				position: absolute;
-				bottom: -4px;
-				left: 50%;
-				width: 0;
-				height: 2px;
-				background: var(--accent);
-				transition: all 0.3s ease;
-				transform: translateX(-50%);
-			}
+			.search-container { max-width: 500px; margin: 0 auto 2rem; }
+			.sort-section { display: flex; justify-content: center; align-items: center; gap: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #f2f2f2; }
+			.sort-label { font-size: 0.75rem; font-weight: 800; color: #b2bec3; text-transform: uppercase; letter-spacing: 0.1em; }
+			.sort-options { display: flex; gap: 1rem; }
+			.sort-btn { border: none; background: transparent; padding: 4px 8px; font-size: 0.85rem; font-weight: 700; color: var(--text-sub); cursor: pointer; }
 			.sort-btn.active { color: var(--accent); }
-			.sort-btn.active::after { width: 100%; }
 
-			ul {
-				display: grid;
-				grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-				gap: 2.5rem;
-				list-style-type: none;
-				padding: 0;
-			}
-			li {
-				background: #fff;
-				border-radius: 16px;
+			ul { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2.5rem; list-style-type: none; padding: 0; }
+
+			.post-item {
+				background: #ffffff;
+				border-radius: 24px;
+				border: 1px solid var(--card-border);
 				overflow: hidden;
-				transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+				transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+				display: flex;
 			}
-			li:hover { transform: translateY(-8px); }
-			li a { display: block; text-decoration: none; color: inherit; }
+
+			.post-item a {
+				display: block;
+				text-decoration: none;
+				color: inherit;
+				width: 100%;
+			}
+
+			/* 修正：border-colorの変更を削除し、浮き上がりと影のみを維持 */
+			.post-item:hover {
+				transform: translateY(-6px);
+				box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+			}
 			
 			.hero-image {
 				width: 100%;
-				height: 220px;
+				height: 200px;
 				object-fit: cover;
-				border-radius: 20px;
-				margin-bottom: 1.2rem;
-				box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-				border: 1px solid #f0f0f0;
+				border-bottom: 1px solid var(--card-border);
+				transition: opacity 0.3s ease;
 			}
-			.title { margin: 0 0 0.6rem 0; color: var(--text-main); line-height: 1.4; font-size: 1.3rem; font-weight: 800; }
+
+			.post-item:hover .hero-image {
+				opacity: 0.9;
+			}
+
+			.post-content {
+				padding: 1.2rem;
+			}
+
+			.title {
+				margin: 0 0 0.8rem 0;
+				color: var(--text-main);
+				line-height: 1.4;
+				font-size: 1.25rem;
+				font-weight: 800;
+				transition: color 0.3s ease;
+			}
+
+			/* 修正：タイトルの色がホバーで変わる設定を削除 */
 			
 			.post-meta {
 				display: flex;
 				align-items: center;
-				gap: 12px;
-				margin-top: 0.5rem;
+				justify-content: space-between;
+				margin-top: 1rem;
 				color: var(--text-sub);
-				font-size: 0.85rem;
 			}
-			.date { margin: 0 !important; line-height: 1; }
+
+			.date { margin: 0 !important; font-size: 0.8rem; font-family: 'SF Mono', monospace; }
+
 			.like-badge {
-				display: inline-flex;
+				display: flex;
 				align-items: center;
-				background: rgba(9, 132, 227, 0.08);
+				gap: 4px;
+			}
+
+			.mini-heart-icon {
+				width: 14px;
+				height: 14px;
+				fill: none;
+				stroke: #b2bec3;
+				stroke-width: 2.5px;
+				transition: all 0.3s ease;
+			}
+
+			.like-count-num {
+				font-family: 'SF Mono', monospace;
+				font-size: 0.85rem;
+				font-weight: 500;
+				color: #86868b;
+				font-variant-numeric: tabular-nums;
+			}
+
+			.post-item:hover .mini-heart-icon {
+				stroke: var(--accent);
+				transform: scale(1.1);
+			}
+			.post-item:hover .like-count-num {
 				color: var(--accent);
-				padding: 2px 10px;
-				border-radius: 8px;
-				font-size: 0.8rem;
-				font-weight: 800;
 			}
 
 			@media (max-width: 768px) {
@@ -207,11 +182,7 @@ const postsWithLikes = posts.map(post => {
 						<a href={`/blog/${cat.slug}`} class="cat-link">{cat.label}</a>
 					))}
 				</nav>
-
-				<div class="search-container">
-					<Search />
-				</div>
-
+				<div class="search-container"> <Search /> </div>
 				<div class="sort-section">
 					<span class="sort-label">Order By</span>
 					<div class="sort-options" id="sort-group">
@@ -226,16 +197,19 @@ const postsWithLikes = posts.map(post => {
 				{postsWithLikes.map((post) => (
 					<li class="post-item" data-date={post.data.pubDate.valueOf()} data-likes={post.likeCount}>
 						<a href={`/blog/${post.id}/`}>
-							{post.data.heroImage && (
-								<Image width={720} height={400} src={post.data.heroImage} alt="" class="hero-image" />
+							{post.data.heroImage && ( 
+								<Image width={720} height={400} src={post.data.heroImage} alt="" class="hero-image" /> 
 							)}
-							<div style="padding: 0.5rem;">
+							<div class="post-content">
 								<h4 class="title">{post.data.title}</h4>
 								<div class="post-meta">
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-									<span class="like-badge">💙 {post.likeCount} likes</span>
+									<p class="date"> <FormattedDate date={post.data.pubDate} /> </p>
+									<div class="like-badge">
+										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="mini-heart-icon">
+											<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+										</svg>
+										<span class="like-count-num">{post.likeCount}</span>
+									</div>
 								</div>
 							</div>
 						</a>
@@ -278,9 +252,11 @@ const postsWithLikes = posts.map(post => {
 						const path = new URL(link.href).pathname;
 						const match = latestData.find(l => l.slug === path);
 						if (match) {
-							const badge = item.querySelector('.like-badge');
-							if (badge) badge.innerText = `💙 ${match.count} likes`;
-							item.dataset.likes = match.count;
+							const countElem = item.querySelector('.like-count-num');
+							if (countElem) {
+								countElem.innerText = match.count;
+								item.dataset.likes = match.count;
+							}
 						}
 					});
 				} catch (e) { console.error(e); }
