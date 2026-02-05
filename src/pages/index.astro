@@ -24,7 +24,11 @@ const latestPost = posts[0];
 		<main>
 			<section class="hero">
 				<div class="status-badge animate-item">2026.04 / Career Start</div>
-				<h1 class="animate-item gradient-text">🧑🏻‍💻 Engineer Log</h1>
+				<h1 class="animate-item gradient-text">
+					<span class="icon-spacer">🧑🏻‍💻</span>
+					Engineer Log
+					<span class="icon-spacer hidden-spacer" aria-hidden="true">🧑🏻‍💻</span>
+				</h1>
 				<p class="tagline animate-item">
 					新社会人エンジニアの学びと日常。<br />
 					<span>挑戦</span>、<span>成長</span>、そして<span>豊かな暮らし</span>への探求。
@@ -166,12 +170,10 @@ const latestPost = posts[0];
 			.topic-card {
 				opacity: 1;
 				transform: translate3d(0, 0, 0);
-				/* 質感向上のため時間を調整し、Apple風のなだらかな曲線 (cubic-bezier) を適用 */
-				transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease, border-color 0.4s ease;
+				transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.55s ease, border-color 0.4s ease;
 				will-change: transform;
 			}
 
-			/* 修正：自動強調時の「量」をホバー時（-12px / 1.05倍）と一致させる */
 			.topic-card.focused {
 				transform: translate3d(0, -12px, 0) scale(1.05);
 				box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
@@ -197,9 +199,7 @@ const latestPost = posts[0];
 				background: var(--accent-gradient);
 				-webkit-background-clip: text;
 				-webkit-text-fill-color: transparent;
-				display: inline-block;
-				text-wrap: balance;
-				padding-left: 0.5em;
+				display: block;
 			}
 
 			.hero { padding: 3rem 0 1.5rem; text-align: left; }
@@ -209,14 +209,40 @@ const latestPost = posts[0];
 				font-weight: bold;
 				color: var(--accent);
 				letter-spacing: 0.1rem;
-				margin-bottom: 0.5rem;
 				background: #eef2ff;
 				padding: 0.2rem 0.6rem;
 				border-radius: 12px;
+				margin-bottom: 0.5rem;
 			}
-			h1 { font-size: 2.8rem; margin: 0; }
-			.tagline { font-size: 1.1rem; color: var(--text-sub); line-height: 1.8; margin-top: 1rem; text-wrap: pretty; }
+
+			/* タイトルのみ中央寄せの設定 */
+			h1 { 
+				font-size: 2.8rem; 
+				margin: 0.8rem 0;
+				text-align: center;
+				white-space: nowrap;
+				width: 100%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+
+			/* 視覚的センター調整用のスペーサー */
+			.icon-spacer {
+				flex-shrink: 0;
+				margin: 0 0.2em; /* 絵文字と文字の間の間隔を左右均等に */
+			}
+			.hidden-spacer {
+				visibility: hidden; /* 右側の絵文字は見えないが、スペースだけ確保する */
+			}
+
+			.tagline { font-size: 1.1rem; color: var(--text-sub); line-height: 1.8; margin-top: 1rem; text-align: left; text-wrap: pretty; }
 			.tagline span { color: var(--text-main); font-weight: 600; border-bottom: 2px solid rgba(0, 113, 227, 0.3); }
+
+			@media (max-width: 480px) {
+				h1 { font-size: 8.5vw; }
+			}
+
 			.section-title { font-size: 1.8rem; margin-bottom: 2rem; color: var(--text-main); font-weight: 700; text-wrap: balance; }
 			.focus-areas { margin-top: 4rem; }
 			.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
@@ -234,7 +260,6 @@ const latestPost = posts[0];
 				overflow: hidden;
 			}
 
-			/* ホバー時（Focused時と同じ強調量を維持） */
 			.card:hover {
 				transform: translate3d(0, -12px, 0) scale(1.05) !important;
 				box-shadow: 0 25px 50px rgba(0,0,0,0.1) !important;
@@ -252,7 +277,6 @@ const latestPost = posts[0];
 				background: var(--accent-gradient);
 				transition: width 0.3s ease;
 			}
-			/* バーが出るのはホバー時のみ */
 			.card:hover::after { width: 100%; }
 
 			.card h3 { font-size: 1.1rem; margin-bottom: 0.8rem; color: var(--text-main); text-wrap: balance; }
@@ -270,10 +294,8 @@ const latestPost = posts[0];
 				background-origin: border-box;
 				background-clip: padding-box, border-box;
 				box-shadow: 0 8px 20px rgba(0, 113, 227, 0.08);
-				/* 最新記事側もなだらかな質感に統一 */
 				transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease-out;
 			}
-			/* 修正：自動強調時の量をホバー時と一致させる */
 			.highlight-card.focused {
 				transform: translate3d(0, -10px, 0) scale(1.03);
 				box-shadow: 0 20px 40px rgba(0, 113, 227, 0.2);
