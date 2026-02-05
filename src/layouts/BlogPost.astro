@@ -142,7 +142,7 @@ const isAboutPage = title === "About Me";
 		<script is:inline>
 			function sharePage() {
 				const title = document.title;
-				const text = `Engineer Log |\n${title}`;
+				const text = `Engineer Log\n${title}`;
 				if (navigator.share) {
 					navigator.share({ title, text, url: window.location.href });
 				} else {
