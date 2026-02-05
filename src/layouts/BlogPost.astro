@@ -35,23 +35,65 @@ const isAboutPage = title === "About Me";
 			.hero-image { width: 100%; }
 			.hero-image img { display: block; margin: 0 auto; border-radius: 12px; box-shadow: var(--box-shadow); }
 
+			/* ▼▼▼ タイポグラフィ階層の再設計 ▼▼▼ */
 			.prose {
 				width: 720px;
 				max-width: calc(100% - 2em);
 				margin: auto;
 				padding: 1em;
-				color: rgb(var(--gray-dark));
+				color: #424245; /* 本文を少しだけ柔らかい黒に */
+				font-size: 1.1rem; /* 本文サイズ */
 				line-height: 1.8;
 			}
 
-			.title { margin-bottom: 0.5em; padding: 0.5em 0 0 0; text-align: center; line-height: 1.2; }
-			.title h1 { margin: 0 0 0.2em 0; font-size: 2.8rem; font-weight: 900; color: #2d3436; }
+			.title { margin-bottom: 1.5em; padding: 0.5em 0 0 0; text-align: center; }
+			
+			/* タイトル (h1): ページ内で最も大きく、圧倒的な存在感 */
+			.title h1 { 
+				margin: 0 0 0.3em 0; 
+				font-size: 3.2rem; 
+				font-weight: 900; 
+				color: var(--apple-black);
+				letter-spacing: -0.03em;
+				line-height: 1.1;
+			}
+
+			/* 見出し (h2): タイトルより一回り小さく、セクションの区切りを明確に */
+			.prose h2 {
+				font-size: 2.1rem;
+				font-weight: 800;
+				color: var(--apple-black);
+				margin: 3.5rem 0 1.2rem;
+				letter-spacing: -0.02em;
+				line-height: 1.3;
+			}
+
+			/* 小見出し (h3): 本文より明らかに大きいが、h2よりは控えめ */
+			.prose h3 {
+				font-size: 1.5rem;
+				font-weight: 700;
+				color: var(--apple-black);
+				margin: 2.5rem 0 1rem;
+				line-height: 1.4;
+			}
 
 			.like-button-wrapper { display: flex; justify-content: center; margin: 0.2rem 0; }
 			.like-button-wrapper :global(.like-container) { margin: 0 !important; gap: 4px !important; }
 			.title hr { margin: 0.5rem auto 1.5rem; border: 0; border-top: 1px solid #eee; }
 
-			/* 修正：滑らかな挙動を実現するシェアボタンデザイン */
+			.date {
+				margin-bottom: 0.5em;
+				color: rgb(var(--gray));
+				font-weight: 500;
+			}
+			
+			.comment-divider {
+				border: 0;
+				border-top: 1px solid #eee;
+				margin: 4rem 0 2rem;
+			}
+
+			/* 滑らかな挙動を実現するシェアボタンデザイン */
 			.share-trigger {
 				position: fixed;
 				bottom: 2.5rem;
@@ -68,7 +110,6 @@ const isAboutPage = title === "About Me";
 				cursor: pointer;
 				box-shadow: 0 15px 45px rgba(0, 113, 227, 0.15);
 				z-index: 100;
-				/* 最適化：イージングと不透明度の変化を追加 */
 				transition: 
 					transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
 					opacity 0.3s ease-out,
@@ -77,7 +118,6 @@ const isAboutPage = title === "About Me";
 				will-change: transform, opacity;
 			}
 
-			/* 修正：引っかかりをなくすため移動量を増やし、フェードアウトさせる */
 			.share-trigger.hidden {
 				transform: translateY(120px) scale(0.9);
 				opacity: 0;
@@ -95,7 +135,10 @@ const isAboutPage = title === "About Me";
 			.share-trigger:hover svg { color: #ffffff; }
 
 			@media (max-width: 768px) {
-				.title h1 { font-size: 2rem; }
+				.title h1 { font-size: 2.2rem; }
+				.prose h2 { font-size: 1.7rem; }
+				.prose h3 { font-size: 1.3rem; }
+				.prose { padding: 0.5em; font-size: 1.05rem; }
 				.share-trigger { bottom: 1.5rem; right: 1.5rem; padding: 0.8rem 1.3rem; font-size: 0.9rem; }
 			}
 		</style>
@@ -151,7 +194,6 @@ const isAboutPage = title === "About Me";
 				}
 			}
 
-			// 修正：requestAnimationFrame を使用した滑らかなスクロール検知
 			let lastScrollY = window.scrollY;
 			let ticking = false;
 			const shareBtn = document.getElementById('scroll-share-btn');
@@ -161,14 +203,11 @@ const isAboutPage = title === "About Me";
 					if (!ticking) {
 						window.requestAnimationFrame(() => {
 							const currentScrollY = window.scrollY;
-							
-							// 下スクロール（100px以上）で隠す、上スクロールで表示
 							if (currentScrollY > lastScrollY && currentScrollY > 100) {
 								shareBtn.classList.add('hidden');
 							} else {
 								shareBtn.classList.remove('hidden');
 							}
-							
 							lastScrollY = currentScrollY;
 							ticking = false;
 						});
