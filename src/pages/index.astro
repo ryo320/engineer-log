@@ -82,7 +82,7 @@ const latestPost = posts[0];
 				const vh = window.innerHeight;
 				const scrollY = window.scrollY;
 
-				if (scrollY < 30) {
+				if (scrollY < 150) {
 					topicCards.forEach(card => card.classList.remove('focused'));
 					return;
 				}
@@ -215,32 +215,30 @@ const latestPost = posts[0];
 				margin-bottom: 0.5rem;
 			}
 
-			/* タイトルのみ中央寄せの設定 */
 			h1 { 
 				font-size: 2.8rem; 
 				margin: 0.8rem 0;
 				text-align: center;
-				white-space: nowrap;
+				white-space: nowrap; /* 一行に強制 */
 				width: 100%;
 				display: flex;
 				justify-content: center;
 				align-items: center;
 			}
 
-			/* 視覚的センター調整用のスペーサー */
-			.icon-spacer {
-				flex-shrink: 0;
-				margin: 0 0.2em; /* 絵文字と文字の間の間隔を左右均等に */
-			}
-			.hidden-spacer {
-				visibility: hidden; /* 右側の絵文字は見えないが、スペースだけ確保する */
-			}
+			.icon-spacer { flex-shrink: 0; margin: 0 0.15em; }
+			.hidden-spacer { visibility: hidden; }
 
 			.tagline { font-size: 1.1rem; color: var(--text-sub); line-height: 1.8; margin-top: 1rem; text-align: left; text-wrap: pretty; }
 			.tagline span { color: var(--text-main); font-weight: 600; border-bottom: 2px solid rgba(0, 113, 227, 0.3); }
 
-			@media (max-width: 480px) {
-				h1 { font-size: 8.5vw; }
+			/* モバイル向けのサイズ最大化設定 */
+			@media (max-width: 600px) {
+				h1 { 
+					/* 画面幅の10%を基準にしつつ、最小2rem〜最大2.8remの範囲で自動調整 */
+					font-size: clamp(2rem, 10vw, 2.8rem); 
+				}
+				.icon-spacer { margin: 0 0.1em; } /* モバイルでは少し間隔を詰めて幅を確保 */
 			}
 
 			.section-title { font-size: 1.8rem; margin-bottom: 2rem; color: var(--text-main); font-weight: 700; text-wrap: balance; }
