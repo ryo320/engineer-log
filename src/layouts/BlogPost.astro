@@ -18,6 +18,9 @@ const { title, description, pubDate, updatedDate, heroImage, showComments = true
 
 const url = Astro.url.href;
 const id = Astro.url.pathname;
+
+// About Me ページかどうかを判定
+const isAboutPage = title === "About Me";
 ---
 
 <html lang="ja"> 
@@ -134,7 +137,6 @@ const id = Astro.url.pathname;
 				transition: transform 0.4s cubic-bezier(0.15, 0, 0.15, 1), background 0.3s ease, border-color 0.3s ease;
 			}
 
-			/* 下スクロール時に隠れるスタイル */
 			.share-trigger.hidden {
 				transform: translateY(150%) scale(0.8);
 				pointer-events: none;
@@ -211,18 +213,20 @@ const id = Astro.url.pathname;
 			)}
 		</main>
 
-		<button id="scroll-share-btn" class="share-trigger" onclick="sharePage()">
-			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-			<span>Share this Post</span>
-		</button>
+		{!isAboutPage && (
+			<button id="scroll-share-btn" class="share-trigger" onclick="sharePage()">
+				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+				<span>Share</span>
+			</button>
+		)}
 
 		<Footer />
 
 		<script is:inline>
-			// シェア機能
 			function sharePage() {
 				const title = document.title;
-				const text = `${title} |\n0と1の世界を研ぎ澄まし、色彩豊かな人生を刻む。`;
+				// Aboutページ以外での標準的なシェアテキスト
+				const text = `Engineer |\n${title}`;
 
 				if (navigator.share) {
 					navigator.share({
@@ -240,18 +244,19 @@ const id = Astro.url.pathname;
 			let lastScrollY = window.scrollY;
 			const shareBtn = document.getElementById('scroll-share-btn');
 
-			window.addEventListener('scroll', () => {
-				const currentScrollY = window.scrollY;
+			// ボタンが存在する場合のみイベントリスナーを登録
+			if (shareBtn) {
+				window.addEventListener('scroll', () => {
+					const currentScrollY = window.scrollY;
 
-				if (currentScrollY > lastScrollY && currentScrollY > 200) {
-					// 下スクロール時：隠す
-					shareBtn.classList.add('hidden');
-				} else {
-					// 上スクロール時：表示
-					shareBtn.classList.remove('hidden');
-				}
-				lastScrollY = currentScrollY;
-			}, { passive: true });
+					if (currentScrollY > lastScrollY && currentScrollY > 200) {
+						shareBtn.classList.add('hidden');
+					} else {
+						shareBtn.classList.remove('hidden');
+					}
+					lastScrollY = currentScrollY;
+				}, { passive: true });
+			}
 		</script>
 	</body>
 </html>
