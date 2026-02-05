@@ -146,23 +146,20 @@ import Layout from '../layouts/BlogPost.astro';
 			}
 		}, { passive: true });
 
-		// --- 追記：スクロール浮き出しアニメーション ---
+		// スクロール浮き出しアニメーション
 		const revealItems = document.querySelectorAll('.reveal-item');
-		
 		const observerOptions = {
 			root: null,
-			rootMargin: '-10% 0px -20% 0px', // ビューポートの上下に少し余裕を持たせる
-			threshold: 0.2 // 20%見えたら発火
+			rootMargin: '-10% 0px -20% 0px',
+			threshold: 0.2
 		};
 
 		const revealObserver = new IntersectionObserver((entries) => {
 			entries.forEach(entry => {
 				if (entry.isIntersecting) {
-					// 画面に入ったら「アクティブ」にする
 					entry.target.classList.add('active');
 				} else {
-					// 画面から消えたら元に戻す（これによりFocus 02に移るとFocus 01が沈む挙動を補佐）
-					if (entry.boundingClientRect.top > 0) { // 下に消える時だけリセット
+					if (entry.boundingClientRect.top > 0) {
 						entry.target.classList.remove('active');
 					}
 				}
@@ -193,7 +190,16 @@ import Layout from '../layouts/BlogPost.astro';
 		.hero-section { padding: 2.5rem 0; text-align: center; }
 		.hero-tagline { margin-top: 0 !important; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--apple-gray); margin-bottom: 0.2rem; }
 		.hero-text { margin-top: 0 !important; font-size: 2.2rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.3; margin-bottom: 1.5rem; text-wrap: balance; }
-		.gradient-text { background: linear-gradient(90deg, #0984e3, #6c5ce7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+		/* 修正：視覚的センター合わせのための設定 */
+		.gradient-text { 
+			background: linear-gradient(90deg, #0984e3, #6c5ce7); 
+			-webkit-background-clip: text; 
+			-webkit-text-fill-color: transparent; 
+			display: inline-block;
+			padding-left: 0.5em; /* 末尾の句読点分を左側に補正 */
+		}
+		
 		.lead-text { font-size: 1.15rem; line-height: 1.7; color: #424245; max-width: 640px; margin: 0 auto; font-weight: 500; text-wrap: pretty; }
 
 		.content-section { padding: 2.5rem 0; border-top: 1px solid var(--apple-border); }
@@ -202,19 +208,18 @@ import Layout from '../layouts/BlogPost.astro';
 		.grid-layout, .lifestyle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
 		.lifestyle-grid { gap: 1.2rem; }
 
-		/* --- 浮き出しアニメーションの基本設定 --- */
+		/* 浮き出しアニメーション設定 */
 		.reveal-item {
-			opacity: 0.2; /* 初期状態はかなり薄く */
-			transform: translateY(30px) scale(0.96); /* 少し下に配置し、小さくする */
-			filter: blur(2px); /* ぼかしを入れることで「遠くにある」感を演出 */
+			opacity: 0.2;
+			transform: translateY(30px) scale(0.96);
+			filter: blur(2px);
 			transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 			will-change: transform, opacity;
 		}
 
-		/* アクティブ（浮き出た状態） */
 		.reveal-item.active {
 			opacity: 1;
-			transform: translateY(0) scale(1.02); /* 元の位置に戻り、わずかに大きく（浮き出し） */
+			transform: translateY(0) scale(1.02);
 			filter: blur(0);
 			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
 			border-color: var(--accent-blue);
@@ -227,7 +232,6 @@ import Layout from '../layouts/BlogPost.astro';
 			border: 1px solid var(--apple-border);
 		}
 
-		/* ホバー時はさらに強調 */
 		.focus-card:hover, .life-group-card:hover {
 			transform: translateY(-8px) scale(1.04) !important;
 			box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
