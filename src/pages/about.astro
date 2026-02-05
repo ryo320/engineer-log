@@ -5,32 +5,41 @@ import Layout from '../layouts/BlogPost.astro';
 
 <Layout
 	title="About Me"
-	description="このブログの運営者と技術的関心、ライフスタイルについて。"
-	pubDate={new Date('February 02 2026')}
+	description="技術制関心とライフスタイル。制御理論からクリエイティブな開発へ。"
+	pubDate={new Date('February 05 2026')}
 	heroImage={AboutHeroImage}
+	showComments={false}
 >
-	<div class="about-container">
-		<section>
-			<h3>Profile</h3>
-			<p>
-				2026年4月よりITエンジニアとしてキャリアをスタートする新社会人です。
+	<div class="apple-style-about">
+		<section class="hero-section">
+			<p class="hero-tagline">Vision & Mission</p>
+			<h2 class="hero-text">
+				Logic in Code, Magic in Life.<br />
+				<span class="gradient-text">0と1の世界を研ぎ澄まし、色彩豊かな人生を刻む。</span>
+			</h2>
+			<p class="lead-text">
+				2026年よりITエンジニアとしての歩みを始める。
+				<br> 仕事と趣味。論理と感性。
+				<br> 互いを昇華させ、「より良い人生」を描く。
 			</p>
 		</section>
 
-		<section>
-			<h3>Technical Interests</h3>
-			<div class="interests-grid">
-				<div class="interest-column">
-					<h4>Past & Current</h4>
-					<ul>
+		<section class="content-section">
+			<div class="section-label">Technical Focus</div>
+			<div class="grid-layout">
+				<div class="focus-card">
+					<span class="card-status">Focus 01</span>
+					<h3>Past</h3>
+					<ul class="clean-list">
+						<li>AI</li>
+						<li>自律移動システム</li>
 						<li>画像処理技術</li>
-						<li>AI / 深層強化学習</li>
-						<li>自律移動システム (ドローン)</li>
 					</ul>
 				</div>
-				<div class="interest-column future">
-					<h4>Future</h4>
-					<ul>
+				<div class="focus-card accent-card">
+					<span class="card-status active">Focus 02</span>
+					<h3>Current & Future</h3>
+					<ul class="clean-list">
 						<li>フロントエンド開発</li>
 						<li>UI / UX デザイン</li>
 					</ul>
@@ -38,77 +47,234 @@ import Layout from '../layouts/BlogPost.astro';
 			</div>
 		</section>
 
-		<section>
-			<h3>Lifestyle & Passions</h3>
+		<section class="content-section">
+			<div class="section-label">Lifestyle & Passions</div>
 			<div class="lifestyle-grid">
-				<div class="lifestyle-column">
-					<h4>Current Interests</h4>
-					<ul>
-						<li><strong>Travel:</strong> シンガポール, ドイツ, 台湾, イタリア, フランス, マカオ / 2027 フィンランド計画中</li>
-						<li><strong>Live:</strong> 幅広く聴くミーハー。back number, セカオワ, 米津玄師, YOASOBI, Ado, Novelbright, Vaundy, Mrs. GREEN APPLE, ずとまよ, 髭男, ヨルシカなど</li>
-						<li><strong>Running:</strong> フルマラソン完走経験あり</li>
-						<li><strong>Beer:</strong> ドイツ旅行を機に開眼。ビール工場見学が趣味</li>
-						<li><strong>Snowboard:</strong> 大学からハマり、現在は年1〜2回程度</li>
-					</ul>
+				<div class="life-group-card">
+					<div class="group-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+							<circle cx="12" cy="12" r="10" stroke-opacity="0.2"/>
+							<polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" stroke="var(--accent-blue)"/>
+						</svg>
+					</div>
+					<div class="life-content">
+						<h4>Travel</h4>
+						<p>シンガポール、ドイツ、台湾、イタリア、フランス、マカオ。2027年にオーロラ観測を計画中。</p>
+					</div>
 				</div>
-				<div class="lifestyle-column future">
-					<h4>Next Challenges</h4>
-					<ul>
-						<li>ボルダリング</li>
-						<li>サーフィン</li>
-						<li>天体観測</li>
-						<li>ゴルフ</li>
-						<li>紅茶</li>
-					</ul>
+
+				<div class="life-group-card">
+					<div class="group-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M3 18v-6a9 9 0 0 1 18 0v6" stroke="var(--accent-blue)"/>
+							<rect x="17" y="13" width="4" height="7" rx="2"/>
+							<rect x="3" y="13" width="4" height="7" rx="2"/>
+						</svg>
+					</div>
+					<div class="life-content">
+						<h4>Music</h4>
+						<p>Vaundy、YOASOBI、ヨルシカ、back number、official髭男dismまで幅広く聴くミーハー。</p>
+					</div>
+				</div>
+
+				<div class="life-group-card">
+					<div class="group-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="var(--accent-blue)" fill="var(--accent-blue)" fill-opacity="0.1"/>
+						</svg>
+					</div>
+					<div class="life-content">
+						<h4>Active</h4>
+						<p>スノーボード、フルマラソン。ボルダリングとサーフィン、天体観測へ挑戦予定。</p>
+					</div>
+				</div>
+
+				<div class="life-group-card">
+					<div class="group-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M17 11h1a3 3 0 0 1 0 6h-1" stroke-opacity="0.3"/>
+							<path d="M7 21h10v-9.5c0-1.4-1.1-2.5-2.5-2.5h-5C8.1 9 7 10.1 7 11.5V21z" stroke="var(--accent-blue)"/>
+							<path d="M12 9V5" stroke-opacity="0.3"/>
+						</svg>
+					</div>
+					<div class="life-content">
+						<h4>Culture</h4>
+						<p>ドイツビールとビール工場見学。紅茶にも、はまりそうかも。</p>
+					</div>
 				</div>
 			</div>
 		</section>
 	</div>
 
 	<style>
-		.about-container h3 {
-			color: #0984e3;
-			font-size: 1.3rem;
-			margin-top: 2rem;
-			margin-bottom: 1rem;
-			border-bottom: 1px solid #eee;
-			padding-bottom: 0.3rem;
+		:root {
+			--apple-black: #1d1d1f;
+			--apple-gray: #86868b;
+			--apple-border: rgba(0, 0, 0, 0.1);
+			--apple-bg: #f5f5f7;
+			--accent-blue: #0071e3;
 		}
-		.about-container h4 {
-			font-size: 1rem;
-			color: #2d3436;
-			margin-bottom: 0.5rem;
+
+		.apple-style-about {
+			color: var(--apple-black);
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+			-webkit-font-smoothing: antialiased;
 		}
-		.about-container ul {
-			list-style: none;
-			padding: 0;
+
+		/* Hero Section - 余白を圧縮 */
+		.hero-section {
+			padding: 3.5rem 0 4.5rem;
+			text-align: center;
 		}
-		.about-container li {
-			font-size: 0.95rem;
-			color: #636e72;
-			margin-bottom: 0.5rem;
-			padding-left: 1rem;
-			position: relative;
+		.hero-tagline {
+			font-size: 0.9rem;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 0.2em;
+			color: var(--apple-gray);
+			margin-bottom: 0.8rem;
+		}
+		.hero-text {
+			font-size: 3.2rem;
+			font-weight: 800;
+			letter-spacing: -0.03em;
+			line-height: 1.1;
+			margin-bottom: 1.5rem;
+		}
+		.gradient-text {
+			background: linear-gradient(90deg, #0984e3, #6c5ce7);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+		}
+		.lead-text {
+			font-size: 1.25rem;
 			line-height: 1.6;
+			color: var(--apple-gray);
+			max-width: 640px;
+			margin: 0 auto;
+			font-weight: 500;
 		}
-		.about-container li::before {
-			content: "•";
-			color: #0984e3;
-			position: absolute;
-			left: 0;
+
+		/* Common Section Layout - 余白を圧縮 */
+		.content-section {
+			padding: 3rem 0;
+			border-top: 1px solid var(--apple-border);
 		}
-		.interests-grid, .lifestyle-grid {
+		.section-label {
+			font-size: 0.8rem;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 0.15em;
+			color: var(--apple-gray);
+			margin-bottom: 2.2rem;
+			text-align: center;
+		}
+
+		/* Grid & Cards - 余白とカード内余白を圧縮 */
+		.grid-layout {
 			display: grid;
 			grid-template-columns: 1fr 1fr;
-			gap: 1.5rem;
+			gap: 2rem;
 		}
-		.interest-column.future, .lifestyle-column.future {
-			padding: 0.5rem 1rem;
-			background-color: #f0f7ff;
-			border-radius: 4px;
+		.focus-card {
+			background: white;
+			padding: 2.2rem;
+			border-radius: 28px;
+			border: 1px solid var(--apple-border);
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+			transition: all 0.4s cubic-bezier(0.15, 0, 0.15, 1);
 		}
-		@media (max-width: 600px) {
-			.interests-grid, .lifestyle-grid { grid-template-columns: 1fr; }
+		.focus-card:hover {
+			transform: translateY(-8px);
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+			border-color: rgba(0, 0, 0, 0.15);
+		}
+		.card-status {
+			font-size: 0.7rem;
+			font-weight: 800;
+			color: var(--apple-gray);
+			text-transform: uppercase;
+			margin-bottom: 0.8rem;
+			display: block;
+		}
+		.card-status.active { color: var(--accent-blue); }
+		
+		.focus-card h3 {
+			font-size: 1.7rem;
+			font-weight: 800;
+			margin-bottom: 1.2rem;
+			letter-spacing: -0.01em;
+		}
+		.accent-card {
+			background: #fafafa;
+			border-color: transparent;
+		}
+
+		/* Lists */
+		.clean-list { list-style: none; padding: 0; }
+		.clean-list li {
+			font-size: 1.05rem;
+			font-weight: 500;
+			color: var(--apple-black);
+			margin-bottom: 0.8rem;
+			display: flex;
+			align-items: center;
+		}
+		.clean-list li::before {
+			content: "";
+			width: 6px;
+			height: 6px;
+			background: var(--accent-blue);
+			border-radius: 50%;
+			margin-right: 14px;
+			opacity: 0.8;
+		}
+
+		/* Lifestyle Grid & Cards - 余白を圧縮 */
+		.lifestyle-grid {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 1.2rem;
+		}
+		.life-group-card {
+			background: #ffffff;
+			padding: 1.8rem;
+			border-radius: 24px;
+			border: 1px solid var(--apple-border);
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+			transition: all 0.3s ease;
+		}
+		.life-group-card:hover {
+			background: var(--apple-bg);
+		}
+		.group-icon {
+			color: var(--apple-black);
+		}
+		.group-icon svg {
+			width: 32px;
+			height: 32px;
+		}
+		.life-content h4 {
+			font-size: 1.1rem;
+			font-weight: 700;
+			margin-bottom: 0.5rem;
+			color: var(--apple-black);
+		}
+		.life-content p {
+			font-size: 1rem;
+			line-height: 1.5;
+			color: var(--apple-gray);
+			font-weight: 400;
+		}
+
+		@media (max-width: 820px) {
+			.hero-section { padding: 2.5rem 0 3.5rem; }
+			.hero-text { font-size: 2.5rem; }
+			.grid-layout, .lifestyle-grid { grid-template-columns: 1fr; }
+			.content-section { padding: 2.5rem 1.5rem; }
+			.life-group-card { padding: 1.5rem; align-items: center; text-align: center; }
 		}
 	</style>
 </Layout>
