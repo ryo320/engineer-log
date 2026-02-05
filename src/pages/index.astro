@@ -82,7 +82,7 @@ const latestPost = posts[0];
 				const vh = window.innerHeight;
 				const scrollY = window.scrollY;
 
-				if (scrollY < 150) {
+				if (scrollY < 30) {
 					topicCards.forEach(card => card.classList.remove('focused'));
 					return;
 				}
