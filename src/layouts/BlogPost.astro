@@ -21,7 +21,7 @@ const id = Astro.url.pathname;
 const isAboutPage = title === "About Me";
 ---
 
-<html lang="ja">
+<html lang="ja"> 
 	<head>
 		<BaseHead title={title} description={description} />
 		<style is:global>
@@ -44,16 +44,10 @@ const isAboutPage = title === "About Me";
 				color: #424245;
 				font-size: 1.1rem;
 				line-height: 1.8;
-				
 				/* 日本語の改行を最適化：意味の区切りで改行する */
 				word-break: auto-phrase;
 				line-break: strict;
 				overflow-wrap: break-word;
-			}
-
-			/* 本文内のあらゆる要素（Markdown生成物を含む）に適用 */
-			.prose > * {
-				word-break: auto-phrase;
 			}
 
 			/* 本文の段落：末尾に1文字だけ残るのを防ぐ */
@@ -64,16 +58,15 @@ const isAboutPage = title === "About Me";
 
 			.title { margin-bottom: 1.5em; padding: 0.5em 0 0 0; text-align: center; }
 			
-			/* タイトル (h1): 見出しの左右バランスを自動調整 ＋ 意味の切れ目改行 */
+			/* タイトル (h1): 見出しの左右バランスを自動調整 */
 			.title h1 { 
 				margin: 0 0 0.3em 0; 
 				font-size: 3.2rem; 
 				font-weight: 900; 
 				color: var(--apple-black);
 				letter-spacing: -0.03em;
-				line-height: 1.2; /* 少し余裕を持たせて改行判定を改善 */
+				line-height: 1.1;
 				text-wrap: balance;
-				word-break: auto-phrase;
 			}
 
 			/* 見出し (h2): セクションの区切り */
@@ -85,7 +78,6 @@ const isAboutPage = title === "About Me";
 				letter-spacing: -0.02em;
 				line-height: 1.3;
 				text-wrap: balance;
-				word-break: auto-phrase;
 			}
 
 			/* 小見出し (h3) */
@@ -96,7 +88,6 @@ const isAboutPage = title === "About Me";
 				margin: 2.5rem 0 1rem;
 				line-height: 1.4;
 				text-wrap: balance;
-				word-break: auto-phrase;
 			}
 
 			.like-button-wrapper { display: flex; justify-content: center; margin: 0.2rem 0; }
