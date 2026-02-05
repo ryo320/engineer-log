@@ -51,14 +51,14 @@ const isAboutPage = title === "About Me";
 			.like-button-wrapper :global(.like-container) { margin: 0 !important; gap: 4px !important; }
 			.title hr { margin: 0.5rem auto 1.5rem; border: 0; border-top: 1px solid #eee; }
 
-			/* 改良：より存在感のあるシェアボタンデザイン */
+			/* 修正：滑らかな挙動を実現するシェアボタンデザイン */
 			.share-trigger {
 				position: fixed;
 				bottom: 2.5rem;
 				right: 2.5rem;
-				background: #ffffff; /* 背景に埋もれない白 */
+				background: #ffffff;
 				color: var(--apple-black);
-				border: 2px solid var(--accent-blue); /* 鮮やかな青の枠線 */
+				border: 2px solid var(--accent-blue);
 				padding: 0.9rem 1.6rem;
 				border-radius: 99px;
 				font-weight: 700;
@@ -66,13 +66,20 @@ const isAboutPage = title === "About Me";
 				align-items: center;
 				gap: 0.7rem;
 				cursor: pointer;
-				box-shadow: 0 15px 45px rgba(0, 113, 227, 0.18); /* 青みを帯びた深い影 */
+				box-shadow: 0 15px 45px rgba(0, 113, 227, 0.15);
 				z-index: 100;
-				transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+				/* 最適化：イージングと不透明度の変化を追加 */
+				transition: 
+					transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+					opacity 0.3s ease-out,
+					background 0.3s ease,
+					color 0.3s ease;
+				will-change: transform, opacity;
 			}
 
+			/* 修正：引っかかりをなくすため移動量を増やし、フェードアウトさせる */
 			.share-trigger.hidden {
-				transform: translateY(180%) scale(0.8);
+				transform: translateY(120px) scale(0.9);
 				opacity: 0;
 				pointer-events: none;
 			}
@@ -144,17 +151,29 @@ const isAboutPage = title === "About Me";
 				}
 			}
 
+			// 修正：requestAnimationFrame を使用した滑らかなスクロール検知
 			let lastScrollY = window.scrollY;
+			let ticking = false;
 			const shareBtn = document.getElementById('scroll-share-btn');
+
 			if (shareBtn) {
 				window.addEventListener('scroll', () => {
-					const currentScrollY = window.scrollY;
-					if (currentScrollY > lastScrollY && currentScrollY > 200) {
-						shareBtn.classList.add('hidden');
-					} else {
-						shareBtn.classList.remove('hidden');
+					if (!ticking) {
+						window.requestAnimationFrame(() => {
+							const currentScrollY = window.scrollY;
+							
+							// 下スクロール（100px以上）で隠す、上スクロールで表示
+							if (currentScrollY > lastScrollY && currentScrollY > 100) {
+								shareBtn.classList.add('hidden');
+							} else {
+								shareBtn.classList.remove('hidden');
+							}
+							
+							lastScrollY = currentScrollY;
+							ticking = false;
+						});
+						ticking = true;
 					}
-					lastScrollY = currentScrollY;
 				}, { passive: true });
 			}
 		</script>
