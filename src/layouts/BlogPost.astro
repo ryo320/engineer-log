@@ -35,20 +35,30 @@ const isAboutPage = title === "About Me";
 			.hero-image { width: 100%; }
 			.hero-image img { display: block; margin: 0 auto; border-radius: 12px; box-shadow: var(--box-shadow); }
 
-			/* ▼▼▼ タイポグラフィ階層の再設計 ▼▼▼ */
+			/* ▼▼▼ タイポグラフィ階層と改行ルールの再設計 ▼▼▼ */
 			.prose {
 				width: 720px;
 				max-width: calc(100% - 2em);
 				margin: auto;
 				padding: 1em;
-				color: #424245; /* 本文を少しだけ柔らかい黒に */
-				font-size: 1.1rem; /* 本文サイズ */
+				color: #424245;
+				font-size: 1.1rem;
 				line-height: 1.8;
+				/* 日本語の改行を最適化：意味の区切りで改行する */
+				word-break: auto-phrase;
+				line-break: strict;
+				overflow-wrap: break-word;
+			}
+
+			/* 本文の段落：末尾に1文字だけ残るのを防ぐ */
+			.prose p {
+				text-wrap: pretty;
+				margin-bottom: 1.5em;
 			}
 
 			.title { margin-bottom: 1.5em; padding: 0.5em 0 0 0; text-align: center; }
 			
-			/* タイトル (h1): ページ内で最も大きく、圧倒的な存在感 */
+			/* タイトル (h1): 見出しの左右バランスを自動調整 */
 			.title h1 { 
 				margin: 0 0 0.3em 0; 
 				font-size: 3.2rem; 
@@ -56,9 +66,10 @@ const isAboutPage = title === "About Me";
 				color: var(--apple-black);
 				letter-spacing: -0.03em;
 				line-height: 1.1;
+				text-wrap: balance;
 			}
 
-			/* 見出し (h2): タイトルより一回り小さく、セクションの区切りを明確に */
+			/* 見出し (h2): セクションの区切り */
 			.prose h2 {
 				font-size: 2.1rem;
 				font-weight: 800;
@@ -66,15 +77,17 @@ const isAboutPage = title === "About Me";
 				margin: 3.5rem 0 1.2rem;
 				letter-spacing: -0.02em;
 				line-height: 1.3;
+				text-wrap: balance;
 			}
 
-			/* 小見出し (h3): 本文より明らかに大きいが、h2よりは控えめ */
+			/* 小見出し (h3) */
 			.prose h3 {
 				font-size: 1.5rem;
 				font-weight: 700;
 				color: var(--apple-black);
 				margin: 2.5rem 0 1rem;
 				line-height: 1.4;
+				text-wrap: balance;
 			}
 
 			.like-button-wrapper { display: flex; justify-content: center; margin: 0.2rem 0; }
@@ -93,7 +106,7 @@ const isAboutPage = title === "About Me";
 				margin: 4rem 0 2rem;
 			}
 
-			/* 滑らかな挙動を実現するシェアボタンデザイン */
+			/* シェアボタンのデザイン */
 			.share-trigger {
 				position: fixed;
 				bottom: 2.5rem;
