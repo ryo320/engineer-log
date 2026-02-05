@@ -27,6 +27,7 @@ const id = Astro.url.pathname;
 			/* ▼▼▼ 流体タイポグラフィ設定 ▼▼▼ */
 			:root {
 				font-size: clamp(15px, 0.4vw + 13.5px, 18px);
+				--accent-blue: #0071e3;
 			}
 
 			main {
@@ -111,6 +112,44 @@ const id = Astro.url.pathname;
 				margin: 3rem 0 2rem;
 			}
 
+			/* シェアボタンのデザイン（グラスモフィズム） */
+			.share-trigger {
+				position: fixed;
+				bottom: 2rem;
+				right: 2rem;
+				background: rgba(255, 255, 255, 0.8);
+				backdrop-filter: blur(12px);
+				-webkit-backdrop-filter: blur(12px);
+				color: #1d1d1f;
+				border: 1px solid rgba(0, 0, 0, 0.1);
+				padding: 0.8rem 1.4rem;
+				border-radius: 99px;
+				font-weight: 600;
+				display: flex;
+				align-items: center;
+				gap: 0.6rem;
+				cursor: pointer;
+				box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+				z-index: 100;
+				transition: transform 0.4s cubic-bezier(0.15, 0, 0.15, 1), background 0.3s ease, border-color 0.3s ease;
+			}
+
+			/* 下スクロール時に隠れるスタイル */
+			.share-trigger.hidden {
+				transform: translateY(150%) scale(0.8);
+				pointer-events: none;
+			}
+
+			.share-trigger:hover {
+				border-color: var(--accent-blue);
+				background: rgba(255, 255, 255, 0.9);
+				transform: scale(1.05) translateY(-5px);
+			}
+
+			.share-trigger svg {
+				color: var(--accent-blue);
+			}
+
 			@media (max-width: 768px) {
 				.title h1 {
 					font-size: 2rem;
@@ -119,6 +158,12 @@ const id = Astro.url.pathname;
 				}
 				.prose {
 					padding: 0.5em;
+				}
+				.share-trigger {
+					bottom: 1.5rem;
+					right: 1.5rem;
+					padding: 0.7rem 1.2rem;
+					font-size: 0.85rem;
 				}
 			}
 		</style>
@@ -165,6 +210,48 @@ const id = Astro.url.pathname;
 				</div>
 			)}
 		</main>
+
+		<button id="scroll-share-btn" class="share-trigger" onclick="sharePage()">
+			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+			<span>Share this Post</span>
+		</button>
+
 		<Footer />
+
+		<script is:inline>
+			// シェア機能
+			function sharePage() {
+				const title = document.title;
+				const text = `${title} |\n0と1の世界を研ぎ澄まし、色彩豊かな人生を刻む。`;
+
+				if (navigator.share) {
+					navigator.share({
+						title: title,
+						text: text,
+						url: window.location.href,
+					});
+				} else {
+					navigator.clipboard.writeText(window.location.href);
+					alert("リンクをコピーしました。シェアありがとうございます！");
+				}
+			}
+
+			// スクロール検知によるボタンの出現・消失ロジック
+			let lastScrollY = window.scrollY;
+			const shareBtn = document.getElementById('scroll-share-btn');
+
+			window.addEventListener('scroll', () => {
+				const currentScrollY = window.scrollY;
+
+				if (currentScrollY > lastScrollY && currentScrollY > 200) {
+					// 下スクロール時：隠す
+					shareBtn.classList.add('hidden');
+				} else {
+					// 上スクロール時：表示
+					shareBtn.classList.remove('hidden');
+				}
+				lastScrollY = currentScrollY;
+			}, { passive: true });
+		</script>
 	</body>
 </html>
