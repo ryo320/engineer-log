@@ -8,30 +8,37 @@ export default config({
   collections: {
     blog: collection({
       label: 'Blog Posts',
-      slugField: 'title',
-      // 保存形式を .mdoc から .mdx に変更（Astroのテンプレートに合わせるため）
+      // ファイル名には 'slug' フィールドの値を使用するように設定
+      slugField: 'slug',
       path: 'src/content/blog/*',
       format: { contentField: 'content' },
       entryLayout: 'content',
       schema: {
-        title: fields.slug({ name: { label: 'Title' } }),
+        // 1. 表示用のタイトル（記事の中に表示される文字）
+        title: fields.text({ label: 'Title' }),
+        // 2. URL用のスラッグ（Titleから自動生成される設定）
+        slug: fields.slug({ 
+          from: 'title', 
+          label: 'Slug (URL)',
+          description: 'URLになる文字列です。タイトルを入力すると自動で生成されます。' 
+        }),
         description: fields.text({ label: 'Description', multiline: true }),
         pubDate: fields.date({ label: 'Published Date' }),
-        // 【修正1】カテゴリ選択を追加（これがないと一覧に出ない場合があります）
+        // 3. カテゴリの選択肢を4つに修正
         category: fields.select({
           label: 'Category',
           options: [
-            { label: 'Drone', value: 'drone' },
-            { label: 'Engineering', value: 'engineering' },
-            { label: 'Daily', value: 'daily' },
+            { label: 'Journal', value: 'journal' },
+            { label: 'Technical', value: 'technical' },
+            { label: 'Lifestyle', value: 'lifestyle' },
+            { label: 'Other', value: 'other' },
           ],
-          defaultValue: 'engineering',
+          defaultValue: 'other',
         }),
-        // 【修正2】画像をドラッグ＆ドロップできるように変更
         heroImage: fields.image({
           label: 'Hero Image',
-          directory: 'src/assets/images/blog', // 画像の保存先
-          publicPath: '../../assets/images/blog/', // 記事からの相対パス
+          directory: 'src/assets/images/blog',
+          publicPath: '../../assets/images/blog/',
         }),
         content: fields.markdoc({ 
           label: 'Content',
