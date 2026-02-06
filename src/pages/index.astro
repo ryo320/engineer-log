@@ -82,7 +82,7 @@ const latestPost = posts[0];
 				const vh = window.innerHeight;
 				const scrollY = window.scrollY;
 
-				if (scrollY < 30) {
+				if (scrollY < 20) {
 					topicCards.forEach(card => card.classList.remove('focused'));
 					return;
 				}
@@ -202,7 +202,7 @@ const latestPost = posts[0];
 				display: block;
 			}
 
-			.hero { padding: 3rem 0 1.5rem; text-align: left; }
+			.hero { padding: 0 0 0; text-align: left; }
 			.status-badge {
 				display: inline-block;
 				font-size: 0.75rem;
@@ -249,7 +249,7 @@ const latestPost = posts[0];
 			}
 
 			.section-title { font-size: 1.8rem; margin-bottom: 2rem; color: var(--text-main); font-weight: 700; text-wrap: balance; }
-			.focus-areas { margin-top: 4rem; }
+			.focus-areas { margin-top: 2.2rem; }
 			.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
 			
 			.card {
@@ -287,7 +287,7 @@ const latestPost = posts[0];
 			.card h3 { font-size: 1.1rem; margin-bottom: 0.8rem; color: var(--text-main); text-wrap: balance; }
 			.card p { font-size: 0.95rem; color: var(--text-sub); margin: 0; line-height: 1.6; text-wrap: pretty; }
 			
-			.latest-log-highlight { margin-top: 5rem; }
+			.latest-log-highlight { margin-top: 2.2rem; }
 			.highlight-card {
 				display: block;
 				text-decoration: none;
