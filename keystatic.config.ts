@@ -10,7 +10,7 @@ export default config({
       label: 'Blog Posts',
       slugField: 'title',
       path: 'src/content/blog/*',
-      // 【修正】.md 形式で保存するための設定
+      // 'extension' を削除し、有効なプロパティのみにします
       format: { data: 'yaml', contentField: 'content' },
       entryLayout: 'content',
       schema: {
@@ -22,7 +22,6 @@ export default config({
         }),
         description: fields.text({ label: 'Description', multiline: true }),
         pubDate: fields.date({ label: 'Published Date' }),
-        // 【修正】ご要望の4つのカテゴリ
         category: fields.select({
           label: 'Category',
           options: [
@@ -38,7 +37,6 @@ export default config({
           directory: 'src/assets/images/blog',
           publicPath: '../../assets/images/blog/',
         }),
-        // 【修正】通常のMarkdownとして編集・保存
         content: fields.markdoc({ 
           label: 'Content',
           options: {
