@@ -219,7 +219,7 @@ const latestPost = posts[0];
 				font-size: 2.8rem; 
 				margin: 0.8rem 0;
 				text-align: center;
-				white-space: nowrap; /* 一行に強制 */
+				white-space: nowrap; /* PCでは一行に強制 */
 				width: 100%;
 				display: flex;
 				justify-content: center;
@@ -234,11 +234,19 @@ const latestPost = posts[0];
 
 			/* モバイル向けのサイズ最大化設定 */
 			@media (max-width: 600px) {
-				h1 { 
-					/* 画面幅の10%を基準にしつつ、最小2rem〜最大2.8remの範囲で自動調整 */
-					font-size: clamp(2rem, 10vw, 2.8rem); 
+				main {
+					padding: 1rem; /* パディングを狭めてはみ出しを防止 */
 				}
-				.icon-spacer { margin: 0 0.1em; } /* モバイルでは少し間隔を詰めて幅を確保 */
+				h1 { 
+					font-size: clamp(2rem, 10vw, 2.8rem); 
+					white-space: normal; /* 折り返しを許可 */
+					text-wrap: balance;  /* きれいに2行に分ける */
+					flex-wrap: wrap;     /* アイコンが入り切らない場合に改行を許可 */
+				}
+				.icon-spacer { margin: 0 0.1em; }
+				.grid {
+					grid-template-columns: 1fr; /* カードを1列固定にして横幅オーバーを防ぐ */
+				}
 			}
 
 			.section-title { font-size: 1.8rem; margin-bottom: 2rem; color: var(--text-main); font-weight: 700; text-wrap: balance; }
