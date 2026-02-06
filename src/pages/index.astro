@@ -219,12 +219,12 @@ const latestPost = posts[0];
 				font-size: 2.8rem; 
 				margin: 0.8rem 0;
 				text-align: center;
-				white-space: nowrap; /* PC/スマホ共通で一行に強制 */
+				white-space: nowrap; /* 一行に強制 */
 				width: 100%;
 				display: flex;
 				justify-content: center;
 				align-items: center;
-				overflow: hidden; /* 万が一のはみ出しも物理的にカット */
+				overflow: hidden;
 			}
 
 			.icon-spacer { flex-shrink: 0; margin: 0 0.15em; }
@@ -236,15 +236,15 @@ const latestPost = posts[0];
 			/* モバイル向けのサイズ最適化 */
 			@media (max-width: 600px) {
 				main {
-					padding: 1.5rem 1rem; /* 横揺れを防ぐため余白を少し狭める */
+					padding: 1.5rem 0.8rem; /* 左右の余白をさらに削ってタイトル幅を確保 */
 				}
 				h1 { 
-					/* 8.2vwを基準にしつつ、現在の2.8remを超えない範囲で最大サイズに自動調整 */
-					font-size: clamp(1.5rem, 8.2vw, 2.8rem); 
+					/* 比率を11.5vwまで上げ、上限を3.2remに緩和。一行に収まる最大を狙う */
+					font-size: clamp(1.5rem, 11.5vw, 3.2rem); 
 				}
-				.icon-spacer { margin: 0 0.05em; } /* アイコンとの隙間をモバイル用に詰める */
+				.icon-spacer { margin: 0 0.03em; } /* アイコンの隙間も極限まで詰める */
 				.grid {
-					grid-template-columns: 1fr; /* カードを1列固定にし、はみ出しを確実に防止 */
+					grid-template-columns: 1fr;
 				}
 			}
 
