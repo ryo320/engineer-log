@@ -3,7 +3,7 @@ import { config, fields, collection } from '@keystatic/core';
 export default config({
   storage: {
     kind: 'github',
-    repo: { owner: 'あなたのGitHubユーザー名', name: 'engineer-log' },
+    repo: { owner: 'ryo320', name: 'engineer-log' },
   },
   collections: {
     blog: collection({
