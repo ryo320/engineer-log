@@ -30,7 +30,7 @@ export default config({
             { label: 'Lifestyle', value: 'lifestyle' },
             { label: 'Other', value: 'other' },
           ],
-          defaultValue: 'other',
+          defaultValue: 'journal',
         }),
         heroImage: fields.image({
           label: 'Hero Image',
