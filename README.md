@@ -1,62 +1,30 @@
-# Astro Starter Kit: Blog
+# 🧑🏻‍💻 Engineer Log
 
-```sh
-npm create astro@latest -- --template blog
-```
+A minimalist, high-performance personal blog platform built with **Astro**. This project is designed to document an engineer's journey, focusing on a premium reading experience and fluid interaction design.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## ✨ Key Features
 
-Features:
-
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
+- **Fluid Animation Engine**: Custom scroll-linked focus logic implemented in Vanilla JavaScript. Items transition smoothly as they enter the focus zone using high-end easing for a professional feel.
+- **Typography Optimization**: Advanced CSS layout techniques including `word-break: auto-phrase` and `text-wrap: balance/pretty` to ensure natural line breaks, specifically optimized for Japanese and CJK languages.
+- **Visual Centering Logic**: A unique layout hack that ensures perfect visual centering for icon-text combinations in the hero section across all screen sizes.
+- **Static Search**: Integrated with **Pagefind** for lightning-fast, full-text search without a heavy backend requirement.
+- **Interactive Components**: Includes a lightweight "Like" system and a seamless comment section integration.
+- **Performance First**: Zero-dependency animations and optimized script execution to maintain high Lighthouse scores and smooth scrolling.
 
 ## 🚀 Project Structure
 
-Inside of your Astro project, you'll see the following folders and files:
-
 ```text
-├── public/
+├── public/              # Static assets (images, fonts, favicons)
 ├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
-```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## Credit
-
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+│   ├── components/      # UI components (Header, Footer, Search, etc.)
+│   ├── content/
+│   │   └── blog/        # Blog posts (Markdown / MDX)
+│   ├── layouts/
+│   │   └── BlogPost.astro # Article layout with typography optimizations
+│   ├── pages/
+│   │   ├── index.astro   # Homepage with scroll-linked focus logic
+│   │   └── blog/         # Category and list pages
+│   ├── styles/          # Global CSS and utility styles
+│   └── consts.ts        # Site configuration and constants
+├── astro.config.mjs     # Astro configuration
+└── package.json         # Dependencies and scripts
