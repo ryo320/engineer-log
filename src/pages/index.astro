@@ -219,11 +219,12 @@ const latestPost = posts[0];
 				font-size: 2.8rem; 
 				margin: 0.8rem 0;
 				text-align: center;
-				white-space: nowrap; /* PCでは一行に強制 */
+				white-space: nowrap; /* PC/スマホ共通で一行に強制 */
 				width: 100%;
 				display: flex;
 				justify-content: center;
 				align-items: center;
+				overflow: hidden; /* 万が一のはみ出しも物理的にカット */
 			}
 
 			.icon-spacer { flex-shrink: 0; margin: 0 0.15em; }
@@ -232,24 +233,18 @@ const latestPost = posts[0];
 			.tagline { font-size: 1.1rem; color: var(--text-sub); line-height: 1.8; margin-top: 1rem; text-align: left; text-wrap: pretty; }
 			.tagline span { color: var(--text-main); font-weight: 600; border-bottom: 2px solid rgba(0, 113, 227, 0.3); }
 
-			/* モバイル向けのサイズ最大化設定 */
+			/* モバイル向けのサイズ最適化 */
 			@media (max-width: 600px) {
 				main {
-					padding: 1rem; /* パディングを狭めてはみ出しを防止 */
+					padding: 1.5rem 1rem; /* 横揺れを防ぐため余白を少し狭める */
 				}
 				h1 { 
-					font-size: 2.8rem; 
-					margin: 0.8rem 0;
-					text-align: center;
-					white-space: nowrap; /* 一行に強制 */
-					width: 100%;
-					display: flex;
-					justify-content: center;
-					align-items: center;
+					/* 8.2vwを基準にしつつ、現在の2.8remを超えない範囲で最大サイズに自動調整 */
+					font-size: clamp(1.5rem, 8.2vw, 2.8rem); 
 				}
-				.icon-spacer { margin: 0 0.1em; }
+				.icon-spacer { margin: 0 0.05em; } /* アイコンとの隙間をモバイル用に詰める */
 				.grid {
-					grid-template-columns: 1fr; /* カードを1列固定にして横幅オーバーを防ぐ */
+					grid-template-columns: 1fr; /* カードを1列固定にし、はみ出しを確実に防止 */
 				}
 			}
 
