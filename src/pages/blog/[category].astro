@@ -8,6 +8,14 @@ import FormattedDate from '../../components/FormattedDate.astro';
 import { Image } from 'astro:assets';
 import Search from '../../components/Search.astro';
 
+// 【追加】プレースホルダー画像をインポート
+import placeholder2 from '../../assets/blog-placeholder-2.jpg';
+import placeholder3 from '../../assets/blog-placeholder-3.jpg';
+import placeholder4 from '../../assets/blog-placeholder-4.jpg';
+import placeholder5 from '../../assets/blog-placeholder-5.jpg';
+
+const placeholders = [placeholder2, placeholder3, placeholder4, placeholder5];
+
 export async function getStaticPaths() {
   return CATEGORIES.map((cat) => ({
     params: { category: cat.slug },
@@ -46,6 +54,14 @@ const postsWithLikes = filteredPosts.map(post => {
   const match = likesData.find(l => l.slug === `/blog/${post.id}/`);
   return { ...post, likeCount: match ? match.count : 0 };
 });
+
+// 【追加】決定論的な画像選択関数（記事ページと同じロジック）
+function getHeroImage(post) {
+	if (post.data.heroImage) return post.data.heroImage;
+	const charCodeSum = post.data.title.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+	const index = charCodeSum % placeholders.length;
+	return placeholders[index];
+}
 
 const pageTitle = `${categoryData.label} | ${SITE_TITLE}`;
 ---
@@ -176,7 +192,6 @@ const pageTitle = `${categoryData.label} | ${SITE_TITLE}`;
 				width: 100%;
 			}
 
-			/* ホバー時の挙動（枠線とタイトルの色は変えない） */
 			.post-item:hover {
 				transform: translateY(-6px);
 				box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
@@ -216,7 +231,6 @@ const pageTitle = `${categoryData.label} | ${SITE_TITLE}`;
 
 			.date { margin: 0 !important; font-size: 0.8rem; font-family: 'SF Mono', monospace; }
 
-			/* ミニマル・いいね表示 */
 			.like-badge {
 				display: flex;
 				align-items: center;
@@ -286,9 +300,14 @@ const pageTitle = `${categoryData.label} | ${SITE_TITLE}`;
 					postsWithLikes.map((post) => (
 						<li class="post-item" data-date={post.data.pubDate.valueOf()} data-likes={post.likeCount}>
 							<a href={`/blog/${post.id}/`}>
-								{post.data.heroImage && (
-									<Image width={720} height={400} src={post.data.heroImage} alt="" class="hero-image" />
-								)}
+								{/* 【修正】条件分岐を外し、常に決定論的ロジックで選択された画像を表示 */}
+								<Image 
+									width={720} 
+									height={400} 
+									src={getHeroImage(post)} 
+									alt="" 
+									class="hero-image" 
+								/>
 								<div class="post-content">
 									<h4 class="title">{post.data.title}</h4>
 									<div class="post-meta">

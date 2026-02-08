@@ -7,27 +7,11 @@ import { getCollection } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
 import { Image } from 'astro:assets';
 
-// 【追加】プレースホルダー画像をインポート
-import placeholder2 from '../assets/blog-placeholder-2.jpg';
-import placeholder3 from '../assets/blog-placeholder-3.jpg';
-import placeholder4 from '../assets/blog-placeholder-4.jpg';
-import placeholder5 from '../assets/blog-placeholder-5.jpg';
-
-const placeholders = [placeholder2, placeholder3, placeholder4, placeholder5];
-
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 
 const latestPost = posts[0];
-
-// 【追加】決定論的な画像選択関数（記事ページと同じロジック）
-function getHeroImage(post) {
-	if (post.data.heroImage) return post.data.heroImage;
-	const charCodeSum = post.data.title.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-	const index = charCodeSum % placeholders.length;
-	return placeholders[index];
-}
 ---
 
 <!doctype html>
@@ -74,24 +58,12 @@ function getHeroImage(post) {
 				<h2 class="section-title">Latest Log / 最新の記事</h2>
 				{latestPost ? (
 					<a href={`/blog/${latestPost.id}/`} class="highlight-card topic-card" data-index="99">
-						{/* 【追加】自動選択された画像を表示 */}
-						<div class="highlight-image-wrapper">
-							<Image 
-								width={1020} 
-								height={510} 
-								src={getHeroImage(latestPost)} 
-								alt="" 
-								class="highlight-image"
-							/>
+						<div class="date">
+							<FormattedDate date={latestPost.data.pubDate} />
 						</div>
-						<div class="highlight-content">
-							<div class="date">
-								<FormattedDate date={latestPost.data.pubDate} />
-							</div>
-							<h3 class="title">{latestPost.data.title}</h3>
-							<p class="description">{latestPost.data.description}</p>
-							<span class="read-more">Read More →</span>
-						</div>
+						<h3 class="title">{latestPost.data.title}</h3>
+						<p class="description">{latestPost.data.description}</p>
+						<span class="read-more">Read More →</span>
 					</a>
 				) : (
 					<p>記事がまだありません。</p>
@@ -264,12 +236,13 @@ function getHeroImage(post) {
 			/* モバイル向けのサイズ最適化 */
 			@media (max-width: 600px) {
 				main {
-					padding: 1.5rem 0.8rem;
+					padding: 1.5rem 0.8rem; /* 左右の余白をさらに削ってタイトル幅を確保 */
 				}
 				h1 { 
+					/* 比率を11.5vwまで上げ、上限を3.2remに緩和。一行に収まる最大を狙う */
 					font-size: clamp(1.5rem, 11.5vw, 3.2rem); 
 				}
-				.icon-spacer { margin: 0 0.03em; }
+				.icon-spacer { margin: 0 0.03em; } /* アイコンの隙間も極限まで詰める */
 				.grid {
 					grid-template-columns: 1fr;
 				}
@@ -318,8 +291,7 @@ function getHeroImage(post) {
 			.highlight-card {
 				display: block;
 				text-decoration: none;
-				/* padding を調整して画像と文字のバランスをとる */
-				padding: 0; 
+				padding: 2.5rem;
 				background: #ffffff;
 				border: double 2px transparent;
 				border-radius: 16px;
@@ -328,30 +300,7 @@ function getHeroImage(post) {
 				background-clip: padding-box, border-box;
 				box-shadow: 0 8px 20px rgba(0, 113, 227, 0.08);
 				transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease-out;
-				overflow: hidden; /* 画像の角を丸める */
 			}
-			
-			/* 最新記事カード内の画像スタイル */
-			.highlight-image-wrapper {
-				width: 100%;
-				height: 240px;
-				overflow: hidden;
-			}
-			.highlight-image {
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-				transition: transform 0.6s ease;
-			}
-			.highlight-card:hover .highlight-image {
-				transform: scale(1.05);
-			}
-
-			/* 最新記事カード内のテキストエリア */
-			.highlight-content {
-				padding: 2rem 2.5rem;
-			}
-
 			.highlight-card.focused {
 				transform: translate3d(0, -10px, 0) scale(1.03);
 				box-shadow: 0 20px 40px rgba(0, 113, 227, 0.2);
