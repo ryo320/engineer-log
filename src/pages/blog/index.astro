@@ -8,6 +8,14 @@ import FormattedDate from '../../components/FormattedDate.astro';
 import { Image } from 'astro:assets';
 import Search from '../../components/Search.astro';
 
+// 【追加】プレースホルダー画像をインポート
+import placeholder2 from '../../assets/blog-placeholder-2.jpg';
+import placeholder3 from '../../assets/blog-placeholder-3.jpg';
+import placeholder4 from '../../assets/blog-placeholder-4.jpg';
+import placeholder5 from '../../assets/blog-placeholder-5.jpg';
+
+const placeholders = [placeholder2, placeholder3, placeholder4, placeholder5];
+
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
@@ -29,6 +37,14 @@ const postsWithLikes = posts.map(post => {
   const match = likesData.find(l => l.slug === `/blog/${post.id}/`);
   return { ...post, likeCount: match ? match.count : 0 };
 });
+
+// 【追加】決定論的な画像選択関数（記事ページやカテゴリページと同じロジック）
+function getHeroImage(post) {
+	if (post.data.heroImage) return post.data.heroImage;
+	const charCodeSum = post.data.title.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+	const index = charCodeSum % placeholders.length;
+	return placeholders[index];
+}
 ---
 
 <!doctype html>
@@ -92,7 +108,6 @@ const postsWithLikes = posts.map(post => {
 				width: 100%;
 			}
 
-			/* 修正：border-colorの変更を削除し、浮き上がりと影のみを維持 */
 			.post-item:hover {
 				transform: translateY(-6px);
 				box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
@@ -122,8 +137,6 @@ const postsWithLikes = posts.map(post => {
 				font-weight: 800;
 				transition: color 0.3s ease;
 			}
-
-			/* 修正：タイトルの色がホバーで変わる設定を削除 */
 			
 			.post-meta {
 				display: flex;
@@ -197,9 +210,14 @@ const postsWithLikes = posts.map(post => {
 				{postsWithLikes.map((post) => (
 					<li class="post-item" data-date={post.data.pubDate.valueOf()} data-likes={post.likeCount}>
 						<a href={`/blog/${post.id}/`}>
-							{post.data.heroImage && ( 
-								<Image width={720} height={400} src={post.data.heroImage} alt="" class="hero-image" /> 
-							)}
+							{/* 【修正】heroImageの有無に関わらず常に getHeroImage() を使用して画像を表示 */}
+							<Image 
+								width={720} 
+								height={400} 
+								src={getHeroImage(post)} 
+								alt="" 
+								class="hero-image" 
+							/>
 							<div class="post-content">
 								<h4 class="title">{post.data.title}</h4>
 								<div class="post-meta">
