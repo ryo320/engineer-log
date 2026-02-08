@@ -8,11 +8,30 @@ import Header from '../components/Header.astro';
 import Comments from '../components/Comments.astro';
 import LikeButton from '../components/LikeButton.astro';
 
+// プレースホルダー画像をインポート
+import placeholder2 from '../assets/blog-placeholder-2.jpg';
+import placeholder3 from '../assets/blog-placeholder-3.jpg';
+import placeholder4 from '../assets/blog-placeholder-4.jpg';
+import placeholder5 from '../assets/blog-placeholder-5.jpg';
+
+const placeholders = [placeholder2, placeholder3, placeholder4, placeholder5];
+
 type Props = CollectionEntry<'blog'>['data'] & {
 	showComments?: boolean;
 };
 
 const { title, description, pubDate, updatedDate, heroImage, showComments = true } = Astro.props;
+
+// --- 【決定論的な自動画像選択ロジック】 ---
+let displayHeroImage = heroImage;
+
+if (!heroImage) {
+	// タイトルの文字コードを合計して 0〜3 のインデックスを作成
+	const charCodeSum = title.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+	const index = charCodeSum % placeholders.length;
+	displayHeroImage = placeholders[index];
+}
+// ------------------------------------------
 
 const url = Astro.url.href;
 const id = Astro.url.pathname;
@@ -162,7 +181,8 @@ const isAboutPage = title === "About Me";
 		<main>
 			<article data-pagefind-body>
 				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
+					{/* 指定がない場合は自動選択された画像を表示 */}
+					{displayHeroImage && <Image width={1020} height={510} src={displayHeroImage} alt={title} />}
 				</div>
 				<div class="prose">
 					<div class="title">
