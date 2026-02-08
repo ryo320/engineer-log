@@ -34,7 +34,7 @@ export default config({
           options: [
             { label: 'Journal', value: 'journal' },
             { label: 'Technical', value: 'technical' },
-            { label: 'Lifestyle', value: 'other' },
+            { label: 'Lifestyle', value: 'lifestyle' },
             { label: 'Other', value: 'other' },
           ],
           defaultValue: 'journal',
