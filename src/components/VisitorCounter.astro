@@ -2,70 +2,210 @@
 /* src/components/VisitorCounter.astro */
 ---
 
-<div class="visitor-box">
-  <div class="glow"></div>
-  <div class="content">
-    <span class="label">VISITORS</span>
-    <span id="visitor-count" class="number">----</span>
+<div class="visitor-counter">
+  <div class="cyber-badge">
+    <div class="inner-glow"></div>
+    
+    <div class="badge-header">
+      <div class="status-indicator">
+        <span class="status-dot"></span>
+        <span class="status-pulse"></span>
+      </div>
+      <span class="system-label">Analytics</span>
+    </div>
+
+    <div class="badge-body">
+      <div class="content-stack">
+        
+        <div class="label-row">
+          <div class="icon-box">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <span class="prefix">Total Visits</span>
+        </div>
+
+        <div class="number-display">
+          <span id="visitor-count" class="count">0</span>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="footer-bar"></div>
   </div>
 </div>
 
 <style>
-  .visitor-box {
-    position: relative;
-    display: inline-flex;
-    padding: 2px;
-    background: linear-gradient(135deg, #0984e3, #6c5ce7); /* LikeButtonのaccent-gradient */
-    border-radius: 8px;
-    overflow: hidden;
+  :root {
+    --accent-blue: #0984e3;
+    --accent-purple: #6c5ce7;
+    --glass-fill: rgba(255, 255, 255, 0.7);
   }
 
-  .content {
-    background: #fff; /* 背景が白の場合。ダークモードなら調整 */
-    padding: 0.4rem 1rem;
-    border-radius: 6px;
+  .visitor-counter {
+    display: inline-flex;
+    justify-content: center;
+    padding: 12px;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  .cyber-badge {
+    position: relative;
+    padding: 16px 28px;
+    background: var(--glass-fill);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(var(--gray), 0.15);
+    border-radius: 18px;
+    box-shadow: 
+      0 10px 30px rgba(0, 0, 0, 0.04),
+      inset 0 0 20px rgba(255, 255, 255, 0.5);
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    min-width: 100px;
-    z-index: 1;
+    align-items: center; /* バッジ全体の中身を中央寄せ */
+    gap: 12px;
+    min-width: 190px;
   }
 
-  .label {
-    font-size: 0.65rem;
-    font-weight: 800;
-    letter-spacing: 0.15em;
-    color: #4a5568;
-    opacity: 0.7;
-  }
-
-  .number {
-    font-family: 'Inter', sans-serif; /* BaseHeadで読み込まれているフォント */
-    font-size: 1.5rem;
-    font-weight: 900;
-    background: linear-gradient(135deg, #0984e3, #6c5ce7);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  /* ほんのり光るエフェクト */
-  .glow {
+  .inner-glow {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, #0984e3, #6c5ce7);
-    filter: blur(8px);
-    opacity: 0.3;
+    background: radial-gradient(circle at 50% 50%, rgba(var(--accent-blue), 0.03) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .badge-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 1;
+    opacity: 0.6;
+  }
+
+  .status-indicator {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 8px;
+    height: 8px;
+  }
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--accent-blue);
+    border-radius: 50%;
+    z-index: 2;
+  }
+  .status-pulse {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: var(--accent-blue);
+    border-radius: 50%;
+    animation: ping-pulse 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+  @keyframes ping-pulse {
+    75%, 100% { transform: scale(3.5); opacity: 0; }
+  }
+
+  .system-label {
+    font-size: 0.6rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: rgb(var(--gray));
+  }
+
+  .badge-body {
+    z-index: 1;
+    width: 100%;
+  }
+
+  .content-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* ラベル行と数字行をどちらも中央寄せ */
+    gap: 2px;
+  }
+
+  .label-row {
+    display: flex;
+    align-items: center; /* アイコンとテキストの高さを完璧に揃える */
+    gap: 6px;
+    margin-bottom: 2px;
+  }
+
+  .icon-box {
+    color: var(--accent-blue);
+    opacity: 0.7;
+    display: flex;
+    align-items: center;
+  }
+
+  .prefix {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: rgb(var(--gray));
+    opacity: 0.7;
+    white-space: nowrap;
+    line-height: 1;
+  }
+
+  .number-display {
+    line-height: 1;
+    display: flex;
+    justify-content: center;
+  }
+
+  .count {
+    font-size: 1.9rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-feature-settings: "tnum";
+    letter-spacing: -0.01em;
+  }
+
+  .footer-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+    opacity: 0.4;
   }
 </style>
 
 <script>
   import { createClient } from '@supabase/supabase-js';
-  const supabase = createClient(
-    import.meta.env.PUBLIC_SUPABASE_URL,
-    import.meta.env.PUBLIC_SUPABASE_ANON_KEY
-  );
+  const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+  const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+  const supabase = createClient(supabaseUrl, supabaseKey);
 
-  async function displayCount() {
+  function animateCount(target, start, end, duration) {
+    let startTime = null;
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+      const current = Math.floor(easeOutQuart * (end - start) + start);
+      target.innerText = current.toLocaleString();
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    }
+    window.requestAnimationFrame(step);
+  }
+
+  async function initCounter() {
     const { data, error } = await supabase
       .from('site_stats')
       .select('count')
@@ -74,9 +214,11 @@
 
     if (!error && data) {
       const el = document.getElementById('visitor-count');
-      if (el) el.innerText = Number(data.count).toLocaleString();
+      if (el) {
+        animateCount(el, 0, data.count, 2000);
+      }
     }
   }
 
-  displayCount();
+  initCounter();
 </script>
