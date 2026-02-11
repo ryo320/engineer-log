@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
+import type { MarkdownHeading } from 'astro';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
@@ -18,29 +19,28 @@ const placeholders = [placeholder2, placeholder3, placeholder4, placeholder5];
 
 type Props = CollectionEntry<'blog'>['data'] & {
 	showComments?: boolean;
+	headings?: MarkdownHeading[];
 };
 
-const { title, description, pubDate, updatedDate, heroImage, showComments = true } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, showComments = true, headings } = Astro.props;
+
+// --- 【目次生成ロジック】 ---
+const toc = headings?.filter((h) => h.depth > 1 && h.depth < 4);
 
 // --- 【決定論的な自動画像選択ロジック】 ---
 let displayHeroImage = heroImage;
-
 if (!heroImage) {
-	// タイトルの文字コードを合計して 0〜3 のインデックスを作成
 	const charCodeSum = title.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
 	const index = charCodeSum % placeholders.length;
 	displayHeroImage = placeholders[index];
 }
-// ------------------------------------------
 
 const url = Astro.url.href;
 const id = Astro.url.pathname;
-
-// About Me ページかどうかを判定（重複防止）
 const isAboutPage = title === "About Me";
 ---
 
-<html lang="ja"> 
+<html lang="ja"> 
 	<head>
 		<BaseHead title={title} description={description} />
 		<style is:global>
@@ -48,13 +48,14 @@ const isAboutPage = title === "About Me";
 				font-size: clamp(15px, 0.4vw + 13.5px, 18px);
 				--accent-blue: #0071e3;
 				--apple-black: #1d1d1f;
+				/* ▼▼▼ 【追加】スクロールを滑らかにする ▼▼▼ */
+				scroll-behavior: smooth;
 			}
 
 			main { width: calc(100% - 2em); max-width: 100%; margin: 0; }
 			.hero-image { width: 100%; }
 			.hero-image img { display: block; margin: 0 auto; border-radius: 12px; box-shadow: var(--box-shadow); }
 
-			/* ▼▼▼ タイポグラフィ階層と改行ルールの再設計 ▼▼▼ */
 			.prose {
 				width: 720px;
 				max-width: calc(100% - 2em);
@@ -63,13 +64,11 @@ const isAboutPage = title === "About Me";
 				color: #424245;
 				font-size: 1.1rem;
 				line-height: 1.8;
-				/* 日本語の改行を最適化：意味の区切りで改行する */
 				word-break: auto-phrase;
 				line-break: strict;
 				overflow-wrap: break-word;
 			}
 
-			/* 本文の段落：末尾に1文字だけ残るのを防ぐ */
 			.prose p {
 				text-wrap: pretty;
 				margin-bottom: 1.5em;
@@ -77,7 +76,6 @@ const isAboutPage = title === "About Me";
 
 			.title { margin-bottom: 1.5em; padding: 0.5em 0 0 0; text-align: center; }
 			
-			/* タイトル (h1): 見出しの左右バランスを自動調整 */
 			.title h1 {
 				margin: 0 0 0.3em 0;
 				font-size: 3.2rem;
@@ -88,7 +86,11 @@ const isAboutPage = title === "About Me";
 				text-wrap: balance;
 			}
 
-			/* 見出し (h2): セクションの区切り */
+			/* ▼▼▼ 【修正】ジャンプした際に見出しがヘッダーで隠れないように余白を作る ▼▼▼ */
+			.prose h2, .prose h3 {
+				scroll-margin-top: 100px;
+			}
+
 			.prose h2 {
 				font-size: 2.1rem;
 				font-weight: 800;
@@ -99,7 +101,6 @@ const isAboutPage = title === "About Me";
 				text-wrap: balance;
 			}
 
-			/* 小見出し (h3) */
 			.prose h3 {
 				font-size: 1.5rem;
 				font-weight: 700;
@@ -107,6 +108,41 @@ const isAboutPage = title === "About Me";
 				margin: 2.5rem 0 1rem;
 				line-height: 1.4;
 				text-wrap: balance;
+			}
+
+			/* 目次のデザイン */
+			.toc-container {
+				background: #f5f5f7;
+				border-radius: 12px;
+				padding: 1.5rem;
+				margin: 2rem 0;
+			}
+			.toc-title {
+				font-size: 1.1rem;
+				font-weight: 700;
+				margin-bottom: 1rem;
+				color: var(--apple-black);
+			}
+			.toc-list {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+			.toc-item {
+				margin-bottom: 0.6rem;
+			}
+			.toc-link {
+				color: #424245;
+				text-decoration: none;
+				font-size: 0.95rem;
+				transition: color 0.2s ease;
+			}
+			.toc-link:hover {
+				color: var(--accent-blue);
+			}
+			.depth-3 {
+				margin-left: 1.2rem;
+				font-size: 0.9rem;
 			}
 
 			.like-button-wrapper { display: flex; justify-content: center; margin: 0.2rem 0; }
@@ -125,7 +161,6 @@ const isAboutPage = title === "About Me";
 				margin: 4rem 0 2rem;
 			}
 
-			/* シェアボタンのデザイン */
 			.share-trigger {
 				position: fixed;
 				bottom: 2.5rem;
@@ -142,11 +177,7 @@ const isAboutPage = title === "About Me";
 				cursor: pointer;
 				box-shadow: 0 15px 45px rgba(0, 113, 227, 0.15);
 				z-index: 100;
-				transition: 
-					transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-					opacity 0.3s ease-out,
-					background 0.3s ease,
-					color 0.3s ease;
+				transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease-out, background 0.3s ease, color 0.3s ease;
 				will-change: transform, opacity;
 			}
 
@@ -181,7 +212,6 @@ const isAboutPage = title === "About Me";
 		<main>
 			<article data-pagefind-body>
 				<div class="hero-image">
-					{/* 指定がない場合は自動選択された画像を表示 */}
 					{displayHeroImage && <Image width={1020} height={510} src={displayHeroImage} alt={title} />}
 				</div>
 				<div class="prose">
@@ -191,6 +221,23 @@ const isAboutPage = title === "About Me";
 						<div class="like-button-wrapper"><LikeButton slug={id} /></div>
 						<hr />
 					</div>
+
+					{/* 目次の表示。hrefに#slugを指定することで見出しにジャンプします */}
+					{toc && toc.length > 0 && (
+						<nav class="toc-container">
+							<div class="toc-title">目次</div>
+							<ul class="toc-list">
+								{toc.map((heading) => (
+									<li class={`toc-item depth-${heading.depth}`}>
+										<a href={`#${heading.slug}`} class="toc-link">
+											{heading.text}
+										</a>
+									</li>
+								))}
+							</ul>
+						</nav>
+					)}
+
 					<slot />
 				</div>
 			</article>
@@ -230,7 +277,6 @@ const isAboutPage = title === "About Me";
 			let lastScrollY = window.scrollY;
 			let ticking = false;
 			const shareBtn = document.getElementById('scroll-share-btn');
-
 			if (shareBtn) {
 				window.addEventListener('scroll', () => {
 					if (!ticking) {
