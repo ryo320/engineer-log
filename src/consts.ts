@@ -13,17 +13,17 @@ export const CATEGORIES = [
 	{
 		slug: 'technical',
 		label: 'Technical',
-		description: '趣味でおこなう技術系の挑戦を記録します。',
+		description: '趣味でおこなう技術系の挑戦の記録。',
 	},
 	{
 		slug: 'lifestyle',
 		label: 'Lifestyle',
-		description: 'ガジェットや旅行、QOLを高めるモノ・コトについて。',
+		description: 'ごはんや旅行、QOLを高めるモノ・コトについて。',
 	},
 	{
 		slug: 'other', // URL: /blog/other
 		label: 'Other', // 表示: Other
-		description: 'その他',
+		description: 'その他のつぶやき',
 	},
 ] as const;
 
