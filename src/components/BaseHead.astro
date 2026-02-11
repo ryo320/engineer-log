@@ -42,3 +42,29 @@ const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props;
 <meta property="twitter:image" content={new URL(image, Astro.url)} />
 
 <link rel="sitemap" href="/sitemap-index.xml" />
+
+<script>
+  import { createClient } from '@supabase/supabase-js';
+
+  const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+  const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  async function trackVisitor() {
+    // sessionStorage を確認して、このセッションで未訪問の場合のみカウントアップ
+    const hasVisited = sessionStorage.getItem('visited_this_session');
+
+    if (!hasVisited) {
+      // SupabaseのRPC（ストアドファンクション）を呼び出す
+      const { error } = await supabase.rpc('increment_total_visitors');
+      
+      if (!error) {
+        // カウントに成功したら、このセッションでは二度と送らないようにフラグを保存
+        sessionStorage.setItem('visited_this_session', 'true');
+      }
+    }
+  }
+
+  // 実行
+  trackVisitor();
+</script>

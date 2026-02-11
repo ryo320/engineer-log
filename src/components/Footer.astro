@@ -1,9 +1,17 @@
 ---
+/* src/components/Footer.astro */
+import VisitorCounter from './VisitorCounter.astro';
+
 const today = new Date();
 ---
 
 <footer>
+	<div class="footer-stats">
+		<VisitorCounter />
+	</div>
+
 	&copy; {today.getFullYear()} Engineer Log. All rights reserved.
+
 	<div class="social-links">
 		<a href="javascript:void(0)" style="cursor: default;">
 			<span class="sr-only">Mastodon (No Link)</span>
@@ -46,6 +54,11 @@ const today = new Date();
 		background: linear-gradient(var(--gray-gradient)) no-repeat;
 		color: rgb(var(--gray));
 		text-align: center;
+	}
+	.footer-stats {
+		margin-bottom: 2rem;
+		display: flex;
+		justify-content: center;
 	}
 	.social-links {
 		display: flex;
