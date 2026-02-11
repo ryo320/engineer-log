@@ -9,9 +9,19 @@ category: journal
 ---
 
 ```
-code
-code
-code
+export default defineConfig({
+    site: 'https://engineer-log.vercel.app/',
+    integrations: [mdx(), sitemap(), react(), keystatic(), markdoc()],
+    // ▼ここを強化：Shikiが各行をspan.lineで囲むように強制します
+    markdown: {
+        shikiConfig: {
+            theme: 'github-light',
+            wrap: true,
+        },
+    },
+    output: 'static',
+    adapter: vercel(),
+});
 ```
 
 テストしてるよー
