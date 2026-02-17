@@ -11,7 +11,7 @@ A minimalist, high-performance personal blog platform built with **Astro**. This
 - **Interactive Components**: Includes a lightweight "Like" system and a seamless comment section integration.
 - **Performance First**: Zero-dependency animations and optimized script execution to maintain high Lighthouse scores and smooth scrolling.
 
-## 🚀 Project Structure
+## 🚀 Project Structure 
 
 ```text
 ├── public/              # Static assets (images, fonts, favicons)
